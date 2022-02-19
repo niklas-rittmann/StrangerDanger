@@ -1,14 +1,15 @@
-from _pytest.recwarn import warns
 import pytest
 from pydantic import ValidationError
-from stranger_danger.fences.rectangular_fence import RectangularFence
+
 from stranger_danger.fences.protocol import Coordinate, Fence
+from stranger_danger.fences.rectangular_fence import RectangularFence
 
 
 @pytest.fixture
 def rec() -> Fence:
     return RectangularFence(
-        name="Test Fence", coordinates=(Coordinate(x=2, y=3), Coordinate(x=0, y=0))
+        name="Test Fence",
+        coordinates=(Coordinate(x=2, y=3), Coordinate(x=0, y=0)),
     )
 
 

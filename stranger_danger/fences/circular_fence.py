@@ -1,6 +1,8 @@
 import math
-from stranger_danger.fences.protocol import Coordinate
+
 from pydantic import BaseModel
+
+from stranger_danger.fences.protocol import Coordinate
 
 Radius = int
 

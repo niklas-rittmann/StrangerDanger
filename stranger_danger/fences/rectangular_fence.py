@@ -1,7 +1,8 @@
-from pydantic.typing import NoneType
-from stranger_danger.fences.protocol import Coordinate
-from pydantic import BaseModel
 from typing import Tuple
+
+from pydantic import BaseModel
+
+from stranger_danger.fences.protocol import Coordinate
 
 Rec_Coordinates = Tuple[Coordinate, Coordinate]
 
@@ -29,10 +30,3 @@ class RectangularFence(BaseModel):
                 _between_points(first.y, second.y, point.y),
             ]
         )
-
-
-# fence = RectangularFence(coordinates=(Coordinate(x=1, y=1), Coordinate(x=3, y=3)))
-# print(fence.inside_fence(Coordinate(x=4, y=4)))
-# print(fence.inside_fence(Coordinate(x=0, y=4)))
-# print(fence.inside_fence(Coordinate(x=4, y=0)))
-# print(fence.inside_fence(Coordinate(x=2, y=2)))

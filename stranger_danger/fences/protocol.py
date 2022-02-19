@@ -1,4 +1,4 @@
-from typing import Optional, Protocol, Sequence, Tuple, Union
+from typing import Protocol
 
 from pydantic.main import BaseModel
 
