@@ -1,4 +1,4 @@
-from typing import Any, Optional, Protocol, Sequence
+from typing import Any, Protocol, Sequence
 
 import numpy as np
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ class Classifier(Protocol):
 
     name: str
     labels: Sequence[str]
-    model: Optional[Any]
+    model: Any
 
     def _setup_model(self) -> Any:
         """Setup the classfier model"""
@@ -38,7 +38,7 @@ class Classifier(Protocol):
         """Predict using pretrained model"""
         ...
 
-    def _convert_labels(self, detections: np.array) -> Predictions:
+    def _convert_labels(self, detections: np.ndarray) -> Predictions:
         """Returns the predictions in a uniform way"""
         ...
 

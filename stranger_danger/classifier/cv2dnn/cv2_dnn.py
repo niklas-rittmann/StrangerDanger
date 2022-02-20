@@ -1,5 +1,5 @@
 import pathlib
-from typing import Sequence
+from typing import Iterable, Tuple
 
 import cv2
 import numpy as np
@@ -7,6 +7,9 @@ import numpy as np
 from stranger_danger.classifier.protocol import Image, Prediction, Predictions
 from stranger_danger.constants.image_constants import H, W
 from stranger_danger.fences.protocol import Coordinate
+
+Predict_Yield = Tuple[str, float, Coordinate, Coordinate]
+Oberservation = Iterable[Predict_Yield]
 
 BASE_PATH = pathlib.Path(__file__).parent.absolute()
 LABELS = (
@@ -32,17 +35,32 @@ LABELS = (
     "train",
     "tvmonitor",
 )
-CONF = 0.1
+CONF = 0.3
+
+
+def yield_prediction(detections: np.ndarray) -> Oberservation:
+    detections = detections[0, 0]
+    for i in np.arange(0, detections.shape[0]):
+        confidence = detections[i, 2]
+        if confidence < CONF:
+            continue
+        label = LABELS[int(detections[i, 1])]
+        box = detections[i, 3:7] * np.array([W, H, W, H])
+        (startX, startY, endX, endY) = box.astype("int")
+        start = Coordinate(x=startX, y=startY)
+        end = Coordinate(x=endX, y=endY)
+        yield label, confidence, start, end
 
 
 class Cv2Dnn:
-    def __init__(self, name: str, labels: Sequence[str]) -> None:
+    def __init__(self, name: str = "Cv2 Dnn") -> None:
         self.name = name
-        self.labels = labels
+        self.labels = LABELS
+        self.model = self._setup_model()
 
     def _setup_model(self) -> cv2.dnn_Net:
         """Initialize the cv2dnn model"""
-        self.model = cv2.dnn.readNetFromCaffe(
+        return cv2.dnn.readNetFromCaffe(
             f"{BASE_PATH}/requirements/MobileNetSSD_deploy.prototxt.txt",
             f"{BASE_PATH}/requirements/MobileNetSSD_deploy.caffemodel",
         )
@@ -68,18 +86,12 @@ class Cv2Dnn:
     def _convert_labels(self, detections: np.ndarray) -> Predictions:
         """Returns the predictions in a uniform way"""
         predictions = []
-        for i in np.arange(0, detections.shape[2]):
-            confidence = detections[0, 0, i, 2]
-            if confidence > CONF:
-                label = LABELS[int(detections[0, 0, i, 1])]
-                box = detections[0, 0, i, 3:7] * np.array([W, H, W, H])
-                (startX, startY, endX, endY) = box.astype("int")
-                base_point = self._get_base_point(
-                    Coordinate(x=startX, y=startY), Coordinate(x=endX, y=endY)
-                )
-                predictions.append(
-                    Prediction(label=label, point=base_point, propability=confidence)
-                )
+        for prediction in yield_prediction(detections):
+            label, conf, start, end = prediction
+            base_point = self._get_base_point(start, end)
+            predictions.append(
+                Prediction(label=label, point=base_point, propability=conf)
+            )
         return predictions
 
     def _get_base_point(self, start: Coordinate, end: Coordinate) -> Coordinate:
