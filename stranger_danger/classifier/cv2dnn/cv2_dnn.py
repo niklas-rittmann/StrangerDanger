@@ -59,7 +59,7 @@ class Cv2Dnn:
         )
         return blob
 
-    def _predict(self, image: Image):
+    def _predict(self, image: Image) -> Predictions:
         """Predict using pretrained model"""
         self.model.setInput(image)
         detections = self.model.forward()
@@ -87,9 +87,3 @@ class Cv2Dnn:
         x_base = int((start.x + end.x) / 2)
         y_base = max((start.y, end.y))
         return Coordinate(x=x_base, y=y_base)
-
-
-img = cv2.imread("/Users/niklasrittmann/Desktop/IMG_3464.JPG")
-model = Cv2Dnn(name="Cv2 Classifier", labels=LABELS)
-model._setup_model()
-print(model.transform(img))
