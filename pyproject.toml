@@ -7,13 +7,14 @@ authors = ["Niklas Rittmann <niklas.rittmann@me.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = "^1.9.0"
+matplotlib = "^3.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
 coverage = "^6.3.1"
 
 [tool.black]
-line-length = 80
+line-length = 88
 
 [tool.isort]
 known_third_party = ["pytest"]

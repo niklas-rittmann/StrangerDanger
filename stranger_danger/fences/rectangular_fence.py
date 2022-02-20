@@ -21,7 +21,7 @@ class RectangularFence(BaseModel):
     radius: None = None
 
     def inside_fence(self, point: Coordinate) -> bool:
-        """Calc if point is in circle"""
+        """Calc if point is in rectangle"""
         first, second = self.coordinates
 
         return all(
