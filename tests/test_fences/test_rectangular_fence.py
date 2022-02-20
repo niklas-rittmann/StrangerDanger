@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from stranger_danger.fences.protocol import Coordinate, Fence
-from stranger_danger.fences.rectangular_fence import RectangularFence
+from stranger_danger.fences.rectangular_fence import RectangularFence, _between_points
 
 
 @pytest.fixture
@@ -40,3 +40,23 @@ def test_inside_func(rec):
 def test_outside_func(rec):
     """Test if a point outside the recle is recognised"""
     assert not rec.inside_fence(Coordinate(x=3, y=4))
+
+
+def test_point_in_between_points():
+    """Test if a point inside to other points is detected"""
+    lower, upper = (0, 5)
+    valid_target = 3
+    invalid_target = 6
+
+    assert _between_points(lower, upper, valid_target)
+    assert not _between_points(lower, upper, invalid_target)
+
+
+def test_between_points_mixed_order():
+    """Test if a point inside to other points is detected with switched input"""
+    lower, upper = (5, 0)
+    valid_target = 3
+    invalid_target = 6
+
+    assert _between_points(lower, upper, valid_target)
+    assert not _between_points(lower, upper, invalid_target)
