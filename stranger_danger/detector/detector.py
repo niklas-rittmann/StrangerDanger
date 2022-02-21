@@ -3,7 +3,6 @@ from typing import Sequence
 
 from pydantic import BaseModel
 
-from stranger_danger import fences
 from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
 from stranger_danger.classifier.protocol import Classifier, Prediction, Predictions
 from stranger_danger.fences.circular_fence import CircularFence
