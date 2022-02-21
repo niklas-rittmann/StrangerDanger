@@ -28,7 +28,7 @@ def test_stranger_in_frame(classifier: Classifier, fences: Sequence[Fence], pred
     """Test if strangers are detected correctly"""
     x, y, _in_fence = pred
     prediction = (
-        Prediction(label="Person", point=Coordinate(x=x, y=y), propability=0.7),
+        Prediction(label="person", point=Coordinate(x=x, y=y), propability=0.7),
     )
 
     det = Detector(classifier=classifier, fences=fences)
