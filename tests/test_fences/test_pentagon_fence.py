@@ -1,3 +1,4 @@
+import asyncio
 from typing import Tuple
 
 import pytest
@@ -39,12 +40,12 @@ def test_attributes(pent):
 
 def test_inside_func(pent):
     """Test if a point inside the pentle is recognised"""
-    assert pent.inside_fence(Coordinate(x=1, y=1))
+    assert asyncio.run(pent.inside_fence(Coordinate(x=1, y=1)))
 
 
 def test_outside_func(pent):
     """Test if a point outside the pentle is recognised"""
-    assert not pent.inside_fence(Coordinate(x=4, y=5))
+    assert not asyncio.run(pent.inside_fence(Coordinate(x=4, y=5)))
 
 
 @pytest.mark.parametrize(

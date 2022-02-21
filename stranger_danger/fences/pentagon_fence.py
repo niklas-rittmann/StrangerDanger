@@ -19,6 +19,6 @@ class PentagonFence(BaseModel):
     name: str = "Pentagon Fence"
     coordinates: Pent_Coordinates
 
-    def inside_fence(self, point: Coordinate) -> bool:
+    async def inside_fence(self, point: Coordinate) -> bool:
         """Calc if point is in pentagon"""
         return _inside_pentagon(self.coordinates, point)

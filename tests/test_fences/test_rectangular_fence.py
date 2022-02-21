@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from pydantic import ValidationError
 
@@ -34,12 +36,12 @@ def test_attributes(rec):
 
 def test_inside_func(rec):
     """Test if a point inside the recle is recognised"""
-    assert rec.inside_fence(Coordinate(x=1, y=1))
+    assert asyncio.run(rec.inside_fence(Coordinate(x=1, y=1)))
 
 
 def test_outside_func(rec):
     """Test if a point outside the recle is recognised"""
-    assert not rec.inside_fence(Coordinate(x=3, y=4))
+    assert not asyncio.run(rec.inside_fence(Coordinate(x=3, y=4)))
 
 
 def test_point_in_between_points():
