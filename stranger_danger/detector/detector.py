@@ -3,11 +3,8 @@ from typing import Sequence
 
 from pydantic import BaseModel
 
-from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
-from stranger_danger.classifier.protocol import Classifier, Prediction, Predictions
-from stranger_danger.fences.circular_fence import CircularFence
-from stranger_danger.fences.protocol import Coordinate, Fence
-from stranger_danger.fences.rectangular_fence import RectangularFence
+from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction, Predictions
+from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
 
 
 class Detector(BaseModel):
