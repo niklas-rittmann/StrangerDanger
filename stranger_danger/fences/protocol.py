@@ -12,6 +12,6 @@ class Fence(Protocol):
 
     name: str
 
-    def inside_fence(self, point: Coordinate) -> bool:
+    async def inside_fence(self, point: Coordinate) -> bool:
         """Check if given coordinate in Fence"""
         ...

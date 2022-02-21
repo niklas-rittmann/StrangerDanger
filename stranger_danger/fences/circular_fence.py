@@ -18,6 +18,6 @@ class CircularFence(BaseModel):
     center: Coordinate
     radius: Radius
 
-    def inside_fence(self, point: Coordinate) -> bool:
+    async def inside_fence(self, point: Coordinate) -> bool:
         """Calc if point is in circle"""
         return _square_root_distance(self.center, point) <= self.radius

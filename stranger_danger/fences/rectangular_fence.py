@@ -17,10 +17,8 @@ class RectangularFence(BaseModel):
 
     name: str = "Rectangular Fence"
     coordinates: Rec_Coordinates
-    center: None = None
-    radius: None = None
 
-    def inside_fence(self, point: Coordinate) -> bool:
+    async def inside_fence(self, point: Coordinate) -> bool:
         """Calc if point is in rectangle"""
         first, second = self.coordinates
 
