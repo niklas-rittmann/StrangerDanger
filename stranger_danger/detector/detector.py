@@ -17,10 +17,12 @@ class Detector(BaseModel):
 
     async def stranger_in_frame(self, predictions: Predictions) -> bool:
         """Check if there is a stranger in any of the fences"""
-        tasks = []
-        for prediction in predictions:
-            for fenc in self.fences:
-                tasks.append(fenc.inside_fence(prediction.point))
+        tasks = [
+            fence.inside_fence(prediction.point)
+            for fence in self.fences
+            for prediction in predictions
+            if prediction.label == "person"
+        ]
         return any(await asyncio.gather(*tasks))
 
 
@@ -31,7 +33,7 @@ if __name__ == "__main__":
         name="Rectangular", coordinates=(Coordinate(x=0, y=0), Coordinate(x=4, y=4))
     )
     prediction = (
-        Prediction(label="Person", point=Coordinate(x=7, y=7), propability=0.7),
+        Prediction(label="person", point=Coordinate(x=7, y=7), propability=0.7),
     )
     classifier = Cv2Dnn(name="Classifier")
 
