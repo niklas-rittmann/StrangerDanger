@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from pydantic import ValidationError
 
@@ -29,12 +31,12 @@ def test_attributes(circ):
 
 def test_inside_func(circ):
     """Test if a point inside the circle is recognised"""
-    assert circ.inside_fence(Coordinate(x=3, y=3))
+    assert asyncio.run(circ.inside_fence(Coordinate(x=3, y=3)))
 
 
 def test_outside_func(circ):
     """Test if a point outside the circle is recognised"""
-    assert not circ.inside_fence(Coordinate(x=4, y=5))
+    assert not asyncio.run(circ.inside_fence(Coordinate(x=4, y=5)))
 
 
 def test_square_root_dist():
