@@ -35,9 +35,11 @@ class Detector(BaseModel):
         ]
         return any(await asyncio.gather(*tasks))
 
+    @staticmethod
     async def upload_to_database(self, image: np.ndarray, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
         print("Uploaded to Databse")
 
+    @staticmethod
     async def send_email(self, image: np.ndarray):
         print("Send Email")
