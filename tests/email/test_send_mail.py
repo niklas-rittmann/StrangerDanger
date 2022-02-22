@@ -11,7 +11,7 @@ def test_connection_check(monkeypatch):
     assert not Email(server="", receivers=["test@tests.de"]).check_connection()
 
     monkeypatch.setattr(Email, "_establish_connection", lambda x, y: True)
-    assert Email(server="", receivers=["test@tests.de"]).check_connection()
+    assert Email(server="test_server", receivers=["test@tests.de"]).check_connection()
 
 
 def test_create_message():
