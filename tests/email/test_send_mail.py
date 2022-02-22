@@ -8,6 +8,11 @@ from stranger_danger.email.send_mail import Email
 
 def test_connection_check(monkeypatch):
     """Test if connection check works"""
+
+    def connection(*args):
+        raise ConnectionError()
+
+    monkeypatch.setattr(Email, "_establish_connection", connection)
     assert not Email(server="", receivers=["test@tests.de"]).check_connection()
 
     monkeypatch.setattr(Email, "_establish_connection", lambda x, y: True)
