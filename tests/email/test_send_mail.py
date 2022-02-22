@@ -1,10 +1,8 @@
 import asyncio
-from os import wait
 from smtplib import SMTP
 
 import numpy as np
 
-from stranger_danger.email import send_mail
 from stranger_danger.email.send_mail import Email
 
 
@@ -47,4 +45,4 @@ def test_send_message(monkeypatch):
     monkeypatch.setattr(SMTP, "send_message", lambda x: True)
     mail = Email(receivers=rec, sender=sender, subject=sub)
     image = (np.random.rand(255, 255, 3) * 255).astype(np.uint8)
-    message = asyncio.run(mail.send_email(image))
+    _ = asyncio.run(mail.send_email(image))
