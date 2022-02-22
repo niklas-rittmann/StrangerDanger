@@ -1,6 +1,7 @@
 import asyncio
 from typing import Sequence
 
+import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction, Predictions
@@ -15,6 +16,15 @@ class Detector(BaseModel):
         # Allow own classes like Classifier
         arbitrary_types_allowed = True
 
+    async def run_detector(self, image: np.ndarray):
+        """Predict using classifier, check fences and finally send email"""
+        predictions = self.classifier.transform(image)
+        stranger_detected = asyncio.run(self.stranger_in_frame(predictions))
+        tasks = [self.upload_to_database(image, predictions)]
+        if stranger_detected:
+            tasks.append(self.send_email(image))
+        asyncio.run(*tasks)
+
     async def stranger_in_frame(self, predictions: Predictions) -> bool:
         """Check if there is a stranger in any of the fences"""
         tasks = [
@@ -25,17 +35,9 @@ class Detector(BaseModel):
         ]
         return any(await asyncio.gather(*tasks))
 
+    async def upload_to_database(self, image: np.ndarray, predictions: Predictions):
+        """Upload image and corresponding Predicitions to DB"""
+        print("Uploaded to Databse")
 
-# TODO: Added for testing purposes, delete later
-if __name__ == "__main__":
-    fence_1 = CircularFence(name="Circular", center=Coordinate(x=3, y=3), radius=3)
-    fence_2 = RectangularFence(
-        name="Rectangular", coordinates=(Coordinate(x=0, y=0), Coordinate(x=4, y=4))
-    )
-    prediction = (
-        Prediction(label="person", point=Coordinate(x=7, y=7), propability=0.7),
-    )
-    classifier = Cv2Dnn(name="Classifier")
-
-    det = Detector(classifier=classifier, fences=(fence_1, fence_2))
-    print(asyncio.run(det.stranger_in_frame(prediction)))
+    async def send_email(self, image: np.ndarray):
+        print("Send Email")
