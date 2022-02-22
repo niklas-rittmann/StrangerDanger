@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from typing import Sequence
 
+from numpy import true_divide
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
@@ -35,6 +36,15 @@ class Email(BaseModel):
                 self._send_email(message, receiver, smtp) for receiver in self.receivers
             ]
             await asyncio.gather(*emails)
+
+    def check_connection(self) -> bool:
+        """Check if the connection to the email server works"""
+        with SMTP() as smtp:
+            try:
+                _ = self._establish_connection(smtp)
+            except ConnectionError:
+                return False
+        return True
 
     def _create_message(self, image: Image) -> MIMEMultipart:
         """Create multipart message"""

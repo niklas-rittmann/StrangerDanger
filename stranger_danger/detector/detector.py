@@ -1,16 +1,19 @@
 import asyncio
+from os import wait
 from typing import Sequence
 
 import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction, Predictions
+from stranger_danger.email.send_mail import Email
 from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
 
 
 class Detector(BaseModel):
     classifier: Classifier
     fences: Sequence[Fence]
+    email: Email
 
     class Config:
         # Allow own classes like Classifier
@@ -36,10 +39,10 @@ class Detector(BaseModel):
         return any(await asyncio.gather(*tasks))
 
     @staticmethod
-    async def upload_to_database(self, image: np.ndarray, predictions: Predictions):
+    async def upload_to_database(image: np.ndarray, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
         print("Uploaded to Databse")
 
     @staticmethod
-    async def send_email(self, image: np.ndarray):
+    async def send_email(image: np.ndarray):
         print("Send Email")
