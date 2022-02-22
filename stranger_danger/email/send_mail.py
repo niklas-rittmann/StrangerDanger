@@ -15,7 +15,7 @@ from stranger_danger.classifier.protocol import Image
 SENDER = os.getenv("SENDER", "")
 PASSWORD = os.getenv("EMAIL_PASSWORD", "")
 SERVER = os.getenv("EMAIL_SERVER", "")
-PORT = int(os.getenv("EMAIL_PORT", 30))
+PORT = int(os.getenv("EMAIL_PORT", 587))
 SUBJECT = os.getenv("EMAIL_SUBJECT", "")
 
 
