@@ -35,8 +35,14 @@ def test_stranger_in_frame(
 ):
     """Test if strangers are detected correctly"""
     x, y, _in_fence = pred
+    coord = Coordinate(x=x, y=y)
     prediction = (
-        Prediction(label="person", point=Coordinate(x=x, y=y), propability=0.7),
+        Prediction(
+            label="person",
+            point=Coordinate(x=x, y=y),
+            bounding_box=(coord, coord),
+            propability=0.7,
+        ),
     )
 
     det = Detector(classifier=classifier, fences=fences, email=email)
