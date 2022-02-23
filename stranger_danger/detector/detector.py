@@ -1,13 +1,15 @@
 import asyncio
-from os import wait
 from typing import Sequence
 
+import cv2
 import numpy as np
 from pydantic import BaseModel
 
-from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction, Predictions
+from stranger_danger.classifier import Classifier, Predictions
 from stranger_danger.email.send_mail import Email
-from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
+from stranger_danger.fences import Fence
+
+Image = np.ndarray
 
 
 class Detector(BaseModel):
@@ -23,10 +25,20 @@ class Detector(BaseModel):
         """Predict using classifier, check fences and finally send email"""
         predictions = self.classifier.transform(image)
         stranger_detected = asyncio.run(self.stranger_in_frame(predictions))
-        tasks = [self.upload_to_database(image, predictions)]
         if stranger_detected:
-            tasks.append(self.send_email(image))
-        asyncio.run(*tasks)
+            image = asyncio.run(self.draw_fence_into_image(image))
+            tasks = [
+                self.upload_to_database(image, predictions),
+                self.send_email(image),
+            ]
+            asyncio.run(*tasks)
+
+    async def draw_fence_into_image(self, image: Image) -> Image:
+        """Draw all fences into the image"""
+        fences = await asyncio.gather(*[fence.draw_fence() for fence in self.fences])
+        fence = np.maximum(*fences)
+        image = cv2.add(image, fence)
+        return image
 
     async def stranger_in_frame(self, predictions: Predictions) -> bool:
         """Check if there is a stranger in any of the fences"""
@@ -39,10 +51,10 @@ class Detector(BaseModel):
         return any(await asyncio.gather(*tasks))
 
     @staticmethod
-    async def upload_to_database(image: np.ndarray, predictions: Predictions):
+    async def upload_to_database(image: Image, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
         print("Uploaded to Databse")
 
     @staticmethod
-    async def send_email(image: np.ndarray):
+    async def send_email(image: Image):
         print("Send Email")
