@@ -1,2 +1,4 @@
 H = 400
 W = 600
+COLOR = (255, 0, 0)
+THICKNESS = 2
