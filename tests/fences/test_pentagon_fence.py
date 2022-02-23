@@ -57,6 +57,12 @@ def test_inside_pentagon(pent, point: Tuple, expected: bool):
     assert _inside_pentagon(coordinates, Coordinate(x=point[0], y=point[1])) == expected
 
 
+def test_draw_fence_empty_spots(pent: PentagonFence):
+    """Check if fence is only in the assigned area"""
+    image = asyncio.run(pent.draw_fence())
+    assert tuple(image[100, 100, :]) == (0, 0, 0)
+
+
 @pytest.mark.parametrize("coord", [(0, 0), (0, 3), (1, 4), (3, 3), (3, 0)])
 def test_draw_fence(pent: PentagonFence, coord: Tuple[int, int]):
     """Test if the fence is drawn into an empty image"""
