@@ -31,7 +31,7 @@ def test_stranger_in_frame(classifier: Classifier, fences: Sequence[Fence], pred
     prediction = (
         Prediction(
             label="person",
-            point=Coordinate(x=x, y=y),
+            point=coord,
             bounding_box=(coord, coord),
             propability=0.7,
         ),
