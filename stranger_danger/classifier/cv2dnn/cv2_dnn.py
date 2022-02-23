@@ -4,6 +4,7 @@ from typing import Iterable, Tuple
 import cv2
 import numpy as np
 
+from stranger_danger.classifier.cv2dnn.requirements.constants import CONF, LABELS
 from stranger_danger.classifier.protocol import Image, Prediction, Predictions
 from stranger_danger.constants.image_constants import H, W
 from stranger_danger.fences.protocol import Coordinate
@@ -12,30 +13,6 @@ Predict_Yield = Tuple[str, float, Coordinate, Coordinate]
 Oberservation = Iterable[Predict_Yield]
 
 BASE_PATH = pathlib.Path(__file__).parent.absolute()
-LABELS = (
-    "background",
-    "aeroplane",
-    "bicycle",
-    "bird",
-    "boat",
-    "bottle",
-    "bus",
-    "car",
-    "cat",
-    "chair",
-    "cow",
-    "diningtable",
-    "dog",
-    "horse",
-    "motorbike",
-    "person",
-    "pottedplant",
-    "sheep",
-    "sofa",
-    "train",
-    "tvmonitor",
-)
-CONF = 0.3
 
 
 def yield_prediction(detections: np.ndarray) -> Oberservation:
@@ -45,6 +22,7 @@ def yield_prediction(detections: np.ndarray) -> Oberservation:
         if confidence < CONF:
             continue
         label = LABELS[int(detections[i, 1])]
+
         box = detections[i, 3:7] * np.array([W, H, W, H])
         (startX, startY, endX, endY) = box.astype("int")
         start = Coordinate(x=startX, y=startY)
