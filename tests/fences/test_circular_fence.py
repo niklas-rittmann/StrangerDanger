@@ -9,7 +9,7 @@ from stranger_danger.fences.protocol import Coordinate, Fence
 
 @pytest.fixture
 def circ() -> Fence:
-    return CircularFence(name="Test Fence", center=Coordinate(x=2, y=3), radius=1)
+    return CircularFence(name="Test Fence", center=Coordinate(x=2, y=3), radius=5)
 
 
 def test_validation_error():
@@ -36,7 +36,7 @@ def test_inside_func(circ):
 
 def test_outside_func(circ):
     """Test if a point outside the circle is recognised"""
-    assert not asyncio.run(circ.inside_fence(Coordinate(x=4, y=5)))
+    assert not asyncio.run(circ.inside_fence(Coordinate(x=8, y=5)))
 
 
 def test_square_root_dist():
@@ -44,3 +44,10 @@ def test_square_root_dist():
     base = Coordinate(x=0, y=0)
     target = Coordinate(x=3, y=4)
     assert _square_root_distance(base, target) == 5
+
+
+def test_draw_fence(circ: CircularFence):
+    """Test if the fence is drawn into an empty image"""
+    image = asyncio.run(circ.draw_fence())
+    assert tuple(image[7, 3, :]) != (0, 0, 0)
+    assert tuple(image[100, 100, :]) == (0, 0, 0)

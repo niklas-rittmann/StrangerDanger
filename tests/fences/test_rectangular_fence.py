@@ -62,3 +62,10 @@ def test_between_points_mixed_order():
 
     assert _between_points(lower, upper, valid_target)
     assert not _between_points(lower, upper, invalid_target)
+
+
+def test_draw_fence(rec: RectangularFence):
+    """Test if the fence is drawn into an empty image"""
+    image = asyncio.run(rec.draw_fence())
+    assert tuple(image[0, 0, :]) != (0, 0, 0)
+    assert tuple(image[100, 100, :]) == (0, 0, 0)

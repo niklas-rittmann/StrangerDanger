@@ -55,3 +55,11 @@ def test_inside_pentagon(pent, point: Tuple, expected: bool):
     """Test if the underlying pentagon function works"""
     coordinates = pent.coordinates
     assert _inside_pentagon(coordinates, Coordinate(x=point[0], y=point[1])) == expected
+
+
+@pytest.mark.parametrize("coord", [(0, 0), (0, 3), (1, 4), (3, 3), (3, 0)])
+def test_draw_fence(pent: PentagonFence, coord: Tuple[int, int]):
+    """Test if the fence is drawn into an empty image"""
+    image = asyncio.run(pent.draw_fence())
+    x, y = coord
+    assert tuple(image[x, y, :]) != (0, 0, 0)
