@@ -1,10 +1,12 @@
 import asyncio
 from typing import Sequence
 
+import numpy as np
 import pytest
 from pydantic import ValidationError
 
 from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction
+from stranger_danger.constants.image_constants import H, W
 from stranger_danger.detector.detector import Detector
 from stranger_danger.email.send_mail import Email
 from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
@@ -29,6 +31,11 @@ def email() -> Email:
     return Email(receivers=["test@mail.de"])
 
 
+@pytest.fixture
+def detector(classifier: Classifier, fences: Fence, email: Email) -> Detector:
+    return Detector(classifier=classifier, fences=fences, email=email)
+
+
 @pytest.mark.parametrize("pred", [(1, 1, True), (11, 11, True), (15, 15, False)])
 def test_stranger_in_frame(
     classifier: Classifier, fences: Sequence[Fence], email: Email, pred
@@ -47,6 +54,14 @@ def test_stranger_in_frame(
 
     det = Detector(classifier=classifier, fences=fences, email=email)
     assert asyncio.run(det.stranger_in_frame(prediction)) == _in_fence
+
+
+def test_draw_fences(detector: Detector):
+    """Draw fences into image"""
+    image = np.zeros((H, W, 3), dtype=np.uint8)
+    image = asyncio.run(detector.draw_fence_into_image(image))
+    assert tuple(image[13, 10, :]) != (0, 0, 0)
+    assert tuple(image[4, 4, :]) != (0, 0, 0)
 
 
 def test_input_validation(
