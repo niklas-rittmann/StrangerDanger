@@ -90,7 +90,12 @@ class Cv2Dnn:
             label, conf, start, end = prediction
             base_point = self._get_base_point(start, end)
             predictions.append(
-                Prediction(label=label, point=base_point, propability=conf)
+                Prediction(
+                    label=label,
+                    point=base_point,
+                    bounding_box=(start, end),
+                    propability=conf,
+                )
             )
         return predictions
 

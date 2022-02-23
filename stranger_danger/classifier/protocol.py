@@ -1,4 +1,4 @@
-from typing import Any, Protocol, Sequence
+from typing import Any, Protocol, Sequence, Tuple
 
 import numpy as np
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ from stranger_danger.fences.protocol import Coordinate
 class Prediction(BaseModel):
     label: str
     point: Coordinate
+    bounding_box: Tuple[Coordinate, Coordinate]
     propability: float
 
 
