@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from pydantic import BaseModel
 
-from stranger_danger.classifier.protocol import Image
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
 from stranger_danger.fences.protocol import Coordinate
 
