@@ -5,7 +5,6 @@ from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from typing import Sequence
 
-from numpy import true_divide
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
