@@ -5,8 +5,8 @@ from sqlalchemy.sql.schema import Column
 Base = declarative_base()
 
 
-class Detector(Base):
-    """ORM Model of Detector"""
+class Email(Base):
+    """ORM Model of Email"""
 
     id = Column(Integer, nullable=False)
     definition = Column(JSON)
