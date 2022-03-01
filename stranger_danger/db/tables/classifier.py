@@ -1,9 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, func
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import BLOB
 
-Base = declarative_base()
+from stranger_danger.db.config.settings import Base
 
 
 class Classifier(Base):
