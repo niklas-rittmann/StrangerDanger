@@ -1,4 +1,5 @@
-from typing import AsyncIterable, Iterable
+import asyncio
+from typing import AsyncIterable
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -14,3 +15,4 @@ async def create_session() -> AsyncIterable[AsyncSession]:
     async with async_session() as session:
         yield session
         await session.commit()
+    await engine.dispose()
