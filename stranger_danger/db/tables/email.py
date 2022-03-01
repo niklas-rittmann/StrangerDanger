@@ -1,8 +1,7 @@
 from sqlalchemy import JSON, Column, DateTime, Integer, func
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql.schema import Column
 
-Base = declarative_base()
+from stranger_danger.db.config.settings import Base
 
 
 class Email(Base):
