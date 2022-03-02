@@ -1,5 +1,7 @@
 import os
 
+from sqlalchemy.orm.decl_api import declarative_base
+
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
