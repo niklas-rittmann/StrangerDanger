@@ -7,6 +7,7 @@ from stranger_danger.db.config.settings import Base
 class Email(Base):
     """ORM Model of Email"""
 
-    id = Column(Integer, nullable=False)
+    __tablename__ = "email"
+    id = Column(Integer, primary_key=True)
     definition = Column(JSON)
-    date = Column(DateTime, func.now())
+    date = Column(DateTime, server_default=func.now())

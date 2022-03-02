@@ -8,6 +8,7 @@ from stranger_danger.db.config.settings import Base
 class Classifier(Base):
     """ORM Model of Detector"""
 
-    id = Column(Integer, nullable=False)
+    __tablename__ = "classifier"
+    id = Column(Integer, primary_key=True)
     model = Column(BLOB)
-    date = Column(DateTime, func.now())
+    date = Column(DateTime, server_default=func.now())
