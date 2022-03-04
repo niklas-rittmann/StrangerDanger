@@ -5,7 +5,8 @@ import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
-from stranger_danger.fences.protocol import Coordinate, FenceImage
+from stranger_danger.constants.image_types import FenceImage
+from stranger_danger.fences.protocol import Coordinate
 
 Radius = int
 

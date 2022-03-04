@@ -5,12 +5,12 @@ import cv2
 import numpy as np
 from pydantic import BaseModel
 
-from stranger_danger.classifier import Classifier, Predictions
+from stranger_danger.classifier.protocol import Classifier, Predictions
+from stranger_danger.constants.image_types import AnnotadedImage
 from stranger_danger.email.send_mail import EmailConstrutor
-from stranger_danger.fences import Fence
+from stranger_danger.fences.protocol import Fence
 
 Image = np.ndarray
-AnnotadedImage = NewType("AnnotadedImage", np.ndarray)
 
 
 class Detector(BaseModel):

@@ -1,9 +1,8 @@
-from typing import NewType, Protocol, Tuple
+from typing import Protocol, Tuple
 
-import numpy as np
 from pydantic.main import BaseModel
 
-FenceImage = NewType("FenceImage", np.ndarray)
+from stranger_danger.constants.image_types import FenceImage
 
 
 class Coordinate(BaseModel):
