@@ -25,7 +25,7 @@ class CircularFence(BaseModel):
     async def draw_fence(self) -> Image:
         """Draw the fence into as blanck image"""
         image = np.zeros((H, W, 3), dtype=np.uint8)
-        return cv2.circle(image, self.center.tuple, self.radius, COLOR, THICKNESS)
+        return cv2.circle(image, self.center.as_tuple, self.radius, COLOR, THICKNESS)
 
     async def inside_fence(self, point: Coordinate) -> bool:
         """Calc if point is in circle"""
