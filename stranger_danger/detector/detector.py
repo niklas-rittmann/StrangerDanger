@@ -1,5 +1,5 @@
 import asyncio
-from typing import Sequence
+from typing import NewType, Sequence
 
 import cv2
 import numpy as np
@@ -10,6 +10,7 @@ from stranger_danger.email.send_mail import EmailConstrutor
 from stranger_danger.fences import Fence
 
 Image = np.ndarray
+AnnotadedImage = NewType("AnnotadedImage", np.ndarray)
 
 
 class Detector(BaseModel):
@@ -33,12 +34,12 @@ class Detector(BaseModel):
             ]
             asyncio.run(*tasks)
 
-    async def draw_fence_into_image(self, image: Image) -> Image:
+    async def draw_fence_into_image(self, image: Image) -> AnnotadedImage:
         """Draw all fences into the image"""
         fences = await asyncio.gather(*[fence.draw_fence() for fence in self.fences])
         fence = np.maximum(*fences)
         image = cv2.add(image, fence)
-        return image
+        return AnnotadedImage(image)
 
     async def stranger_in_frame(self, predictions: Predictions) -> bool:
         """Check if there is a stranger in any of the fences"""
@@ -51,10 +52,10 @@ class Detector(BaseModel):
         return any(await asyncio.gather(*tasks))
 
     @staticmethod
-    async def upload_to_database(image: Image, predictions: Predictions):
+    async def upload_to_database(image: AnnotadedImage, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
         print("Uploaded to Databse")
 
     @staticmethod
-    async def send_email(image: Image):
+    async def send_email(image: AnnotadedImage):
         print("Send Email")

@@ -5,10 +5,9 @@ import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
-from stranger_danger.fences.protocol import Coordinate
+from stranger_danger.fences.protocol import Coordinate, FenceImage
 
-Image = np.ndarray
-Rec_Coordinates = Tuple[Coordinate, Coordinate]
+RecCoordinates = Tuple[Coordinate, Coordinate]
 
 
 def _between_points(lower: int, upper: int, coord: int) -> bool:
@@ -20,9 +19,9 @@ def _between_points(lower: int, upper: int, coord: int) -> bool:
 class RectangularFence(BaseModel):
 
     name: str = "Rectangular Fence"
-    coordinates: Rec_Coordinates
+    coordinates: RecCoordinates
 
-    async def draw_fence(self) -> Image:
+    async def draw_fence(self) -> FenceImage:
         """Draw the fence into as blanck image"""
         image = np.zeros((H, W, 3), dtype=np.uint8)
         start_point, end_point = self.coordinates

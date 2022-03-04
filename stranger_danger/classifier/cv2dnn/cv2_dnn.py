@@ -9,8 +9,8 @@ from stranger_danger.classifier.protocol import Image, Prediction, Predictions
 from stranger_danger.constants.image_constants import H, W
 from stranger_danger.fences.protocol import Coordinate
 
-Predict_Yield = Tuple[str, float, Coordinate, Coordinate]
-Oberservation = Iterable[Predict_Yield]
+PredictYield = Tuple[str, float, Coordinate, Coordinate]
+Oberservation = Iterable[PredictYield]
 
 BASE_PATH = pathlib.Path(__file__).parent.absolute()
 

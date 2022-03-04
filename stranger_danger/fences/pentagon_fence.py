@@ -5,11 +5,9 @@ import numpy as np
 from matplotlib import path
 from pydantic import BaseModel
 
-from stranger_danger.classifier.protocol import Image
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
-from stranger_danger.fences.protocol import Coordinate
+from stranger_danger.fences.protocol import Coordinate, FenceImage
 
-Image = np.ndarray
 PentCoordinates = Tuple[Coordinate, Coordinate, Coordinate, Coordinate, Coordinate]
 
 
@@ -18,7 +16,7 @@ class PentagonFence(BaseModel):
     name: str = "Pentagon Fence"
     coordinates: PentCoordinates
 
-    async def draw_fence(self) -> Image:
+    async def draw_fence(self) -> FenceImage:
         """Draw the fence into as blanck image"""
         image = np.zeros((H, W, 3), dtype=np.uint8)
         coord = np.array([coord.as_tuple for coord in self.coordinates])

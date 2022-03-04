@@ -5,9 +5,8 @@ import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
-from stranger_danger.fences.protocol import Coordinate
+from stranger_danger.fences.protocol import Coordinate, FenceImage
 
-Image = np.ndarray
 Radius = int
 
 
@@ -22,7 +21,7 @@ class CircularFence(BaseModel):
     center: Coordinate
     radius: Radius
 
-    async def draw_fence(self) -> Image:
+    async def draw_fence(self) -> FenceImage:
         """Draw the fence into as blanck image"""
         image = np.zeros((H, W, 3), dtype=np.uint8)
         return cv2.circle(image, self.center.as_tuple, self.radius, COLOR, THICKNESS)
