@@ -13,6 +13,7 @@
 - [x] Build a class the hold different fences, the email constructor and a classifier
 - [x] Integrate a databse to hold the fences, predictions, classifiers and email settings
 - [ ] Build the event based image detection
+- [ ] Integrate an API that allows you to:
   - [ ] Specify fences
   - [ ] Select different image classifiers
   - [ ] Start and Stop the detection service
