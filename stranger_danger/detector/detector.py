@@ -6,7 +6,7 @@ import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Predictions
-from stranger_danger.email.send_mail import Email
+from stranger_danger.email.send_mail import EmailConstrutor
 from stranger_danger.fences import Fence
 
 Image = np.ndarray
@@ -15,7 +15,7 @@ Image = np.ndarray
 class Detector(BaseModel):
     classifier: Classifier
     fences: Sequence[Fence]
-    email: Email
+    email: EmailConstrutor
 
     class Config:
         # Allow own classes like Classifier

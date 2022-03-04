@@ -10,13 +10,13 @@ from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
 from stranger_danger.fences.protocol import Coordinate
 
 Image = np.ndarray
-Pent_Coordinates = Tuple[Coordinate, Coordinate, Coordinate, Coordinate, Coordinate]
+PentCoordinates = Tuple[Coordinate, Coordinate, Coordinate, Coordinate, Coordinate]
 
 
 class PentagonFence(BaseModel):
 
     name: str = "Pentagon Fence"
-    coordinates: Pent_Coordinates
+    coordinates: PentCoordinates
 
     async def draw_fence(self) -> Image:
         """Draw the fence into as blanck image"""
