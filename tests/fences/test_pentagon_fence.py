@@ -4,7 +4,7 @@ from typing import Tuple
 import pytest
 from pydantic import ValidationError
 
-from stranger_danger.fences.pentagon_fence import PentagonFence, _inside_pentagon
+from stranger_danger.fences.pentagon_fence import PentagonFence
 from stranger_danger.fences.protocol import Coordinate, Fence
 
 
@@ -38,23 +38,18 @@ def test_attributes(pent):
     assert pent.coordinates[3].y == 4
 
 
-def test_inside_func(pent):
+@pytest.mark.parametrize(
+    "point, expected", [((0, 3), True), ((0, 0), True), ((4, 0), False)]
+)
+def test_inside_func(pent, point: Tuple, expected: bool):
     """Test if a point inside the pentle is recognised"""
-    assert asyncio.run(pent.inside_fence(Coordinate(x=1, y=1)))
+    x, y = point
+    assert asyncio.run(pent.inside_fence(Coordinate(x=x, y=y))) == expected
 
 
 def test_outside_func(pent):
     """Test if a point outside the pentle is recognised"""
     assert not asyncio.run(pent.inside_fence(Coordinate(x=4, y=5)))
-
-
-@pytest.mark.parametrize(
-    "point, expected", [((0, 3), True), ((0, 0), True), ((4, 0), False)]
-)
-def test_inside_pentagon(pent, point: Tuple, expected: bool):
-    """Test if the underlying pentagon function works"""
-    coordinates = pent.coordinates
-    assert _inside_pentagon(coordinates, Coordinate(x=point[0], y=point[1])) == expected
 
 
 def test_draw_fence_empty_spots(pent: PentagonFence):
