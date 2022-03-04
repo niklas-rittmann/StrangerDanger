@@ -18,7 +18,7 @@ PORT = int(os.getenv("EMAIL_PORT", 587))
 SUBJECT = os.getenv("EMAIL_SUBJECT", "")
 
 
-class Email(BaseModel):
+class EmailConstrutor(BaseModel):
     receivers: Sequence[EmailStr]
     sender: str = SENDER
     password: str = PASSWORD
