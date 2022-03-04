@@ -6,24 +6,13 @@ from sqlalchemy import engine_from_config, pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from stranger_danger.db.config.settings import DB_URL
-
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
-config = context.config
-config.set_main_option("sqlalchemy.url", DB_URL)
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-fileConfig(config.config_file_name)
-
-# add your model's MetaData object here
-# for 'autogenerate' support
 from stranger_danger.db.tables import Base
 
+config = context.config
+config.set_main_option("sqlalchemy.url", DB_URL)
+fileConfig(config.config_file_name)
+
 target_metadata = Base.metadata
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline():
