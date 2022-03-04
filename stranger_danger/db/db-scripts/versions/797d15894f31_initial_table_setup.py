@@ -1,15 +1,15 @@
 """Initial Table Setup
 
-Revision ID: 0f8fddb8bb9c
+Revision ID: 797d15894f31
 Revises:
-Create Date: 2022-03-02 20:45:24.476539
+Create Date: 2022-03-04 18:48:43.612731
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "0f8fddb8bb9c"
+revision = "797d15894f31"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -20,7 +20,7 @@ def upgrade():
     op.create_table(
         "classifier",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("model", sa.BLOB(), nullable=True),
+        sa.Column("model", sa.LargeBinary(), nullable=True),
         sa.Column(
             "date", sa.DateTime(), server_default=sa.text("now()"), nullable=True
         ),
@@ -47,7 +47,7 @@ def upgrade():
     op.create_table(
         "predictions",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("image", sa.BLOB(), nullable=False),
+        sa.Column("image", sa.LargeBinary(), nullable=False),
         sa.Column("confidence", sa.Float(), nullable=False),
         sa.Column(
             "date", sa.DateTime(), server_default=sa.text("now()"), nullable=True
