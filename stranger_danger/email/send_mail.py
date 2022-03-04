@@ -8,7 +8,7 @@ from typing import Sequence
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
-from stranger_danger.detector.detector import AnnotadedImage
+from stranger_danger.constants.image_types import AnnotadedImage
 
 # Add them for now, move them to database
 SENDER = os.getenv("SENDER", "")

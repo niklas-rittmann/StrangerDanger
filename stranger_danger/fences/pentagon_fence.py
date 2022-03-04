@@ -6,7 +6,8 @@ from matplotlib import path
 from pydantic import BaseModel
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
-from stranger_danger.fences.protocol import Coordinate, FenceImage
+from stranger_danger.constants.image_types import FenceImage
+from stranger_danger.fences.protocol import Coordinate
 
 PentCoordinates = Tuple[Coordinate, Coordinate, Coordinate, Coordinate, Coordinate]
 
