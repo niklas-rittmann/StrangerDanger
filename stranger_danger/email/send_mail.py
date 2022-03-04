@@ -8,7 +8,7 @@ from typing import Sequence
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
-from stranger_danger.classifier.protocol import Image
+from stranger_danger.detector.detector import AnnotadedImage
 
 # Add them for now, move them to database
 SENDER = os.getenv("SENDER", "")
@@ -26,7 +26,7 @@ class EmailConstrutor(BaseModel):
     port: int = PORT
     subject: str = SUBJECT
 
-    async def send_email(self, image: Image):
+    async def send_email(self, image: AnnotadedImage):
         """Send Email to receivers"""
         message = self._create_message(image)
         with SMTP() as smtp:
@@ -45,7 +45,7 @@ class EmailConstrutor(BaseModel):
                 return False
         return True
 
-    def _create_message(self, image: Image) -> MIMEMultipart:
+    def _create_message(self, image: AnnotadedImage) -> MIMEMultipart:
         """Create multipart message"""
         msg = MIMEMultipart()
         msg["Subject"] = self.subject
@@ -53,7 +53,7 @@ class EmailConstrutor(BaseModel):
         msg.attach(self._add_image_to_email(image))
         return msg
 
-    def _add_image_to_email(self, image: Image) -> MIMEImage:
+    def _add_image_to_email(self, image: AnnotadedImage) -> MIMEImage:
         """Attach image to email"""
         return MIMEImage(image.tobytes(), _subtype="jpg")
 

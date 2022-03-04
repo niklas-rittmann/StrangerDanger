@@ -1,9 +1,9 @@
-from typing import Protocol, Tuple
+from typing import NewType, Protocol, Tuple
 
 import numpy as np
 from pydantic.main import BaseModel
 
-Image = np.ndarray
+FenceImage = NewType("FenceImage", np.ndarray)
 
 
 class Coordinate(BaseModel):
@@ -20,7 +20,7 @@ class Fence(Protocol):
 
     name: str
 
-    async def draw_fence(self) -> Image:
+    async def draw_fence(self) -> FenceImage:
         """Draw the fence into an empty image"""
         ...
 
