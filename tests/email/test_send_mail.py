@@ -3,7 +3,7 @@ from smtplib import SMTP
 
 import numpy as np
 
-from stranger_danger.email.send_mail import Email
+from stranger_danger.email.send_mail import EmailConstrutor
 
 
 def test_connection_check(monkeypatch):
@@ -12,11 +12,13 @@ def test_connection_check(monkeypatch):
     def connection(*args):
         raise ConnectionError()
 
-    monkeypatch.setattr(Email, "_establish_connection", connection)
-    assert not Email(server="", receivers=["test@tests.de"]).check_connection()
+    monkeypatch.setattr(EmailConstrutor, "_establish_connection", connection)
+    assert not EmailConstrutor(
+        server="", receivers=["test@tests.de"]
+    ).check_connection()
 
-    monkeypatch.setattr(Email, "_establish_connection", lambda x, y: True)
-    assert Email(server="", receivers=["test@tests.de"]).check_connection()
+    monkeypatch.setattr(EmailConstrutor, "_establish_connection", lambda x, y: True)
+    assert EmailConstrutor(server="", receivers=["test@tests.de"]).check_connection()
 
 
 def test_create_message():
@@ -27,7 +29,7 @@ def test_create_message():
         "test",
     )
 
-    mail = Email(receivers=rec, sender=sender, subject=sub)
+    mail = EmailConstrutor(receivers=rec, sender=sender, subject=sub)
     image = (np.random.rand(255, 255, 3) * 255).astype(np.uint8)
     message = mail._create_message(image)
     assert message["From"] == sender
@@ -46,8 +48,8 @@ def test_send_message(monkeypatch):
         def send_message(*args, **kwargs):
             return
 
-    monkeypatch.setattr(Email, "_establish_connection", lambda x, y: Session)
+    monkeypatch.setattr(EmailConstrutor, "_establish_connection", lambda x, y: Session)
     monkeypatch.setattr(SMTP, "send_message", lambda x: True)
-    mail = Email(receivers=rec, sender=sender, subject=sub)
+    mail = EmailConstrutor(receivers=rec, sender=sender, subject=sub)
     image = (np.random.rand(255, 255, 3) * 255).astype(np.uint8)
     _ = asyncio.run(mail.send_email(image))

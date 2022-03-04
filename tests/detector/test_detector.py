@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction
 from stranger_danger.constants.image_constants import H, W
 from stranger_danger.detector.detector import Detector
-from stranger_danger.email.send_mail import Email
+from stranger_danger.email.send_mail import EmailConstrutor
 from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
 
 
@@ -27,18 +27,18 @@ def fences() -> Sequence[Fence]:
 
 
 @pytest.fixture
-def email() -> Email:
-    return Email(receivers=["test@mail.de"])
+def email() -> EmailConstrutor:
+    return EmailConstrutor(receivers=["test@mail.de"])
 
 
 @pytest.fixture
-def detector(classifier: Classifier, fences: Fence, email: Email) -> Detector:
+def detector(classifier: Classifier, fences: Fence, email: EmailConstrutor) -> Detector:
     return Detector(classifier=classifier, fences=fences, email=email)
 
 
 @pytest.mark.parametrize("pred", [(1, 1, True), (11, 11, True), (15, 15, False)])
 def test_stranger_in_frame(
-    classifier: Classifier, fences: Sequence[Fence], email: Email, pred
+    classifier: Classifier, fences: Sequence[Fence], email: EmailConstrutor, pred
 ):
     """Test if strangers are detected correctly"""
     x, y, _in_fence = pred
@@ -65,7 +65,7 @@ def test_draw_fences(detector: Detector):
 
 
 def test_input_validation(
-    classifier: Classifier, fences: Sequence[Fence], email: Email
+    classifier: Classifier, fences: Sequence[Fence], email: EmailConstrutor
 ):
     """Test if the input validation raises validation"""
     with pytest.raises(ValidationError):
