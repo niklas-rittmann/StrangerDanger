@@ -27,7 +27,7 @@ class RectangularFence(BaseModel):
         image = np.zeros((H, W, 3), dtype=np.uint8)
         start_point, end_point = self.coordinates
         return cv2.rectangle(
-            image, start_point.tuple, end_point.tuple, COLOR, THICKNESS
+            image, start_point.as_tuple, end_point.as_tuple, COLOR, THICKNESS
         )
 
     async def inside_fence(self, point: Coordinate) -> bool:

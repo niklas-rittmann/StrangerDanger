@@ -11,7 +11,7 @@ class Coordinate(BaseModel):
     y: int
 
     @property
-    def tuple(self) -> Tuple[int, int]:
+    def as_tuple(self) -> Tuple[int, int]:
         """Return tuple representation of coordinate"""
         return (self.x, self.y)
 
