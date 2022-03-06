@@ -17,6 +17,9 @@ psycopg2-binary = "^2.9.3"
 watchdog = "^2.1.6"
 setuptools = "^60.9.3"
 
+[tool.pytest.ini_options]
+asyncio_mode = auto
+
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
 coverage = "^6.3.1"
