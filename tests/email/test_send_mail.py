@@ -3,7 +3,7 @@ from smtplib import SMTP
 
 import numpy as np
 
-from stranger_danger.email.send_mail import EmailConstrutor
+from stranger_danger.email_service.send_mail import EmailConstrutor
 
 
 def test_connection_check(monkeypatch):
