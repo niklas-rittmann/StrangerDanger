@@ -4,3 +4,4 @@ __pycache__/
 .coverage
 .env
 .envrc
+run_locally.py
