@@ -1,5 +1,6 @@
 import os
 import time
+from asyncio.tasks import sleep
 
 import cv2
 from watchdog.events import FileSystemEventHandler
@@ -23,14 +24,15 @@ class FilesytemWatcher:
             FileHandler(self.detector), DIRECTORY_TO_WATCH, recursive=True
         )
         self.filewatcher.start()
-        self.check_watcher()
 
-    def check_watcher(self) -> None:
+    def stop_watcher(self) -> None:
         """Check if the filewatcher should remain running"""
-        while self.status:
-            time.sleep(3)
         self.filewatcher.stop()
         self.filewatcher.join()
+
+    @property
+    def is_running(self) -> bool:
+        return self.filewatcher.is_alive()
 
 
 class FileHandler(FileSystemEventHandler):
