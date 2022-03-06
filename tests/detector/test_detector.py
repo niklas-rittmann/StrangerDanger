@@ -7,8 +7,8 @@ from pydantic import ValidationError
 
 from stranger_danger.classifier import Classifier, Cv2Dnn, Prediction
 from stranger_danger.constants.image_constants import H, W
-from stranger_danger.detector.detector import Detector
-from stranger_danger.email.send_mail import EmailConstrutor
+from stranger_danger.detector.detector import Detector, _compare_arrays
+from stranger_danger.email_service.send_mail import EmailConstrutor
 from stranger_danger.fences import CircularFence, Coordinate, Fence, RectangularFence
 
 
@@ -76,3 +76,11 @@ def test_input_validation(
 
     with pytest.raises(ValidationError):
         Detector(classifier=3, fences=fences, email=email)
+
+
+def test_max_from_arrays():
+    arr_1 = np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3]])
+    arr_2 = np.array([[3, 2, 1], [1, 2, 3], [3, 3, 3]])
+    output = _compare_arrays([arr_1, arr_2])
+    expected = np.array([[3, 2, 3], [1, 2, 3], [3, 3, 3]])
+    np.testing.assert_array_equal(output, expected)
