@@ -1,16 +1,24 @@
 import asyncio
-from typing import NewType, Sequence
+from typing import Sequence
 
 import cv2
 import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Predictions
-from stranger_danger.constants.image_types import AnnotadedImage
-from stranger_danger.email.send_mail import EmailConstrutor
+from stranger_danger.constants.image_types import AnnotadedImage, FenceImage
+from stranger_danger.email_service.send_mail import EmailConstrutor
 from stranger_danger.fences import Fence
 
 Image = np.ndarray
+
+
+def _compare_arrays(fence_images: Sequence[FenceImage]) -> FenceImage:
+    """Stack fence images vertically, find the max and reshape"""
+    shape = fence_images[0].shape
+    stacked = np.vstack([image.reshape(1, -1) for image in fence_images])
+    max_per_column = stacked.max(axis=0)
+    return FenceImage(max_per_column.reshape(shape))
 
 
 class Detector(BaseModel):
@@ -22,7 +30,7 @@ class Detector(BaseModel):
         # Allow own classes like Classifier
         arbitrary_types_allowed = True
 
-    async def run_detector(self, image: np.ndarray):
+    def run_detector(self, image: np.ndarray):
         """Predict using classifier, check fences and finally send email"""
         predictions = self.classifier.transform(image)
         stranger_detected = asyncio.run(self.stranger_in_frame(predictions))
@@ -37,7 +45,7 @@ class Detector(BaseModel):
     async def draw_fence_into_image(self, image: Image) -> AnnotadedImage:
         """Draw all fences into the image"""
         fences = await asyncio.gather(*[fence.draw_fence() for fence in self.fences])
-        fence = np.maximum(*fences)
+        fence = _compare_arrays(fences)
         image = cv2.add(image, fence)
         return AnnotadedImage(image)
 
