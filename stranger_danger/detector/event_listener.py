@@ -1,14 +1,21 @@
 import os
-import time
-from asyncio.tasks import sleep
+from pathlib import Path
 
 import cv2
+import numpy as np
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers.polling import PollingObserver
 
+from stranger_danger.constants.image_constants import H, W
 from stranger_danger.detector.detector import Detector
 
 DIRECTORY_TO_WATCH = os.getenv("DIRECTORY_TO_WATCH")
+
+
+def load_resize_image(path: Path) -> np.ndarray:
+    """Resize image to desired size"""
+    image = cv2.imread(path)
+    return cv2.resize(image, (H, W), interpolation=cv2.INTER_AREA)
 
 
 class FilesytemWatcher:
@@ -43,5 +50,5 @@ class FileHandler(FileSystemEventHandler):
     def on_created(self, event):
         """Check which event occured"""
         if not event.is_directory and event.src_path.endswith("jpg"):
-            image = cv2.imread(event.src_path)
+            image = load_resize_image(event.src_path)
             self.detector.run_detector(image)
