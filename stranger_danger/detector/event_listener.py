@@ -1,3 +1,4 @@
+import asyncio
 import os
 from pathlib import Path
 
@@ -15,7 +16,7 @@ DIRECTORY_TO_WATCH = os.getenv("DIRECTORY_TO_WATCH")
 def load_resize_image(path: Path) -> np.ndarray:
     """Resize image to desired size"""
     image = cv2.imread(path)
-    return cv2.resize(image, (H, W), interpolation=cv2.INTER_AREA)
+    return cv2.resize(image, (W, H), interpolation=cv2.INTER_AREA)
 
 
 class FilesytemWatcher:
