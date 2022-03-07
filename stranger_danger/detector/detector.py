@@ -37,6 +37,16 @@ class Detector(BaseModel):
         if stranger_detected:
             asyncio.run(self.process_detection(image, predictions))
 
+    async def stranger_in_frame(self, predictions: Predictions) -> bool:
+        """Check if there is a stranger in any of the fences"""
+        tasks = [
+            fence.inside_fence(prediction.point)
+            for fence in self.fences
+            for prediction in predictions
+            if prediction.label == "person"
+        ]
+        return any(await asyncio.gather(*tasks))
+
     async def process_detection(self, image: Image, predictions: Predictions):
         """Upload to database and send email"""
         image = await self.draw_fence_into_image(image)
@@ -52,16 +62,6 @@ class Detector(BaseModel):
         fence = _compare_arrays(fences)
         image = cv2.add(image, fence)
         return AnnotadedImage(image)
-
-    async def stranger_in_frame(self, predictions: Predictions) -> bool:
-        """Check if there is a stranger in any of the fences"""
-        tasks = [
-            fence.inside_fence(prediction.point)
-            for fence in self.fences
-            for prediction in predictions
-            if prediction.label == "person"
-        ]
-        return any(await asyncio.gather(*tasks))
 
     @staticmethod
     async def upload_to_database(image: AnnotadedImage, predictions: Predictions):
