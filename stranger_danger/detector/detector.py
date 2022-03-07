@@ -35,12 +35,16 @@ class Detector(BaseModel):
         predictions = self.classifier.transform(image)
         stranger_detected = asyncio.run(self.stranger_in_frame(predictions))
         if stranger_detected:
-            image = asyncio.run(self.draw_fence_into_image(image))
-            tasks = [
-                self.upload_to_database(image, predictions),
-                self.send_email(image),
-            ]
-            asyncio.run(*tasks)
+            asyncio.run(self.process_detection(image, predictions))
+
+    async def process_detection(self, image: Image, predictions: Predictions):
+        """Upload to database and send email"""
+        image = await self.draw_fence_into_image(image)
+        tasks = [
+            self.upload_to_database(image, predictions),
+            self.send_email(image),
+        ]
+        await asyncio.gather(*tasks)
 
     async def draw_fence_into_image(self, image: Image) -> AnnotadedImage:
         """Draw all fences into the image"""
