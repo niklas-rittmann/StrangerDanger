@@ -66,8 +66,8 @@ class Detector(BaseModel):
     @staticmethod
     async def upload_to_database(image: AnnotadedImage, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
+        cv2.imwrite("test.jpg", image)
         print("Uploaded to Databse")
 
-    @staticmethod
-    async def send_email(image: AnnotadedImage):
-        print("Send Email")
+    async def send_email(self, image: AnnotadedImage):
+        await self.email.send_email(image)
