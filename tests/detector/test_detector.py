@@ -29,7 +29,7 @@ def test_stranger_in_frame(
     )
 
     det = Detector(classifier=classifier, fences=fences, email=email)
-    assert asyncio.run(det.stranger_in_frame(prediction)) == _in_fence
+    assert any(asyncio.run(det.stranger_in_frame(prediction))) == _in_fence
 
 
 def test_draw_fences(detector: Detector):
