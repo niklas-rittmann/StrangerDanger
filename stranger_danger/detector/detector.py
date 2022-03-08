@@ -1,11 +1,12 @@
 import asyncio
-from typing import Sequence
+from typing import Sequence, Tuple, Union
 
 import cv2
 import numpy as np
 from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Predictions
+from stranger_danger.classifier.protocol import Prediction
 from stranger_danger.constants.image_types import AnnotadedImage, FenceImage
 from stranger_danger.db.session import create_session
 from stranger_danger.db.tables.predictions import Predictions as PredDB
@@ -13,6 +14,7 @@ from stranger_danger.email_service.send_mail import EmailConstrutor
 from stranger_danger.fences import Fence
 
 Image = np.ndarray
+Observation = Sequence[Tuple[Fence, Prediction]]
 
 
 def _compare_arrays(fence_images: Sequence[FenceImage]) -> FenceImage:
@@ -37,23 +39,27 @@ class Detector(BaseModel):
         predictions = self.classifier.transform(image)
         stranger_detected = asyncio.run(self.stranger_in_frame(predictions))
         if stranger_detected:
-            asyncio.run(self.process_detection(image, predictions))
+            # TODO extract max prediction
+            _, prediction = stranger_detected[0]
+            asyncio.run(self.process_detection(image, prediction))
 
-    async def stranger_in_frame(self, predictions: Predictions) -> bool:
+    async def stranger_in_frame(self, predictions: Predictions) -> Observation:
         """Check if there is a stranger in any of the fences"""
-        tasks = [
-            fence.inside_fence(prediction.point)
+        fence_preds = [
+            (fence, pred)
             for fence in self.fences
-            for prediction in predictions
-            if prediction.label == "person"
+            for pred in predictions
+            if pred.label == "person"
         ]
-        return any(await asyncio.gather(*tasks))
 
-    async def process_detection(self, image: Image, predictions: Predictions):
+        tasks = [fence.inside_fence(pred.point) for fence, pred in fence_preds]
+        return np.array(fence_preds)[await asyncio.gather(*tasks)].tolist()
+
+    async def process_detection(self, image: Image, prediction: Prediction):
         """Upload to database and send email"""
         image = await self.draw_fence_into_image(image)
         tasks = [
-            self.upload_to_database(image, predictions),
+            self.upload_to_database(image, prediction),
             self.send_email(image),
         ]
         await asyncio.gather(*tasks)
@@ -66,12 +72,14 @@ class Detector(BaseModel):
         return AnnotadedImage(image)
 
     @staticmethod
-    async def upload_to_database(image: AnnotadedImage, predictions: Predictions):
+    async def upload_to_database(image: AnnotadedImage, prediction: Prediction):
         """Upload image and corresponding Predicitions to DB"""
-        # TODO extract confidence from predictions
         async with create_session() as session:
             session.add(
-                PredDB(image=cv2.imencode(".jpg", image)[1].tostring(), confidence=79.0)
+                PredDB(
+                    image=cv2.imencode(".jpg", image)[1].tostring(),
+                    confidence=prediction.propability,
+                )
             )
 
     async def send_email(self, image: AnnotadedImage):
