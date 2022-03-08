@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
 from typing import Sequence
 
+import cv2
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
@@ -55,7 +56,7 @@ class EmailConstrutor(BaseModel):
 
     def _add_image_to_email(self, image: AnnotadedImage) -> MIMEImage:
         """Attach image to email"""
-        return MIMEImage(image.tobytes(), _subtype="jpg")
+        return MIMEImage(cv2.imencode(".jpg", image)[1].tostring(), name="Test.jpg")
 
     def _establish_connection(self, session: SMTP) -> SMTP:
         """Establish a connection to the email server"""
