@@ -7,6 +7,8 @@ from pydantic import BaseModel
 
 from stranger_danger.classifier import Classifier, Predictions
 from stranger_danger.constants.image_types import AnnotadedImage, FenceImage
+from stranger_danger.db.session import create_session
+from stranger_danger.db.tables.predictions import Predictions as PredDB
 from stranger_danger.email_service.send_mail import EmailConstrutor
 from stranger_danger.fences import Fence
 
@@ -66,8 +68,11 @@ class Detector(BaseModel):
     @staticmethod
     async def upload_to_database(image: AnnotadedImage, predictions: Predictions):
         """Upload image and corresponding Predicitions to DB"""
-        cv2.imwrite("test.jpg", image)
-        print("Uploaded to Databse")
+        # TODO extract confidence from predictions
+        async with create_session() as session:
+            session.add(
+                PredDB(image=cv2.imencode(".jpg", image)[1].tostring(), confidence=79.0)
+            )
 
     async def send_email(self, image: AnnotadedImage):
         await self.email.send_email(image)
