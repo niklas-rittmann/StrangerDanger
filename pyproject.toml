@@ -16,6 +16,8 @@ asyncpg = "^0.25.0"
 psycopg2-binary = "^2.9.3"
 watchdog = "^2.1.6"
 setuptools = "^60.9.3"
+fastapi = "^0.75.0"
+uvicorn = "^0.17.6"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
