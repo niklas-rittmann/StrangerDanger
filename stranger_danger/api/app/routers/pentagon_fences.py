@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.sql.expression import select
 
-from stranger_danger.api.app.internal.examples import rec_example
+from stranger_danger.api.app.internal.examples import pent_example
 from stranger_danger.db.session import create_session
 from stranger_danger.db.tables import Fences
-from stranger_danger.fences.rectangular_fence import RectangularFence
+from stranger_danger.fences.pentagon_fence import PentagonFence
 
 router = APIRouter(
-    prefix="/rec-fences",
-    tags=["rec-fences"],
+    prefix="/pent-fences",
+    tags=["pent-fences"],
     responses={404: {"description": "Not found"}},
 )
 
@@ -26,15 +26,15 @@ async def read_fences(db=Depends(create_session)):
 async def read_fence(fence_id: int, db=Depends(create_session)):
     """Get fences by their id"""
     fence = await db.get(Fences, fence_id)
-    return RectangularFence.parse_obj(fence.definition)
+    return PentagonFence.parse_obj(fence.definition)
 
 
 @router.post("/")
 async def create_circular_fence(
-    rectangular_fence: RectangularFence = rec_example,
+    pentagon_fence: PentagonFence = pent_example,
     db=Depends(create_session),
 ):
     """Create and store fence"""
-    fence = rectangular_fence
+    fence = pentagon_fence
     db.add(Fences(definition=fence.dict()))
     return {"Status": "Added fence to database"}
