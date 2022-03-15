@@ -11,5 +11,5 @@ class Fences(Base):
     __tablename__ = "fences"
     id = Column(Integer, primary_key=True)
     definition = Column(JSON)
-    type = Column(String)
+    type = Column(String(30))
     date = Column(DateTime, server_default=func.now())
