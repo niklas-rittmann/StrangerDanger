@@ -2,7 +2,7 @@ from typing import Tuple
 
 import cv2
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
 from stranger_danger.constants.image_types import FenceImage
@@ -21,6 +21,7 @@ class RectangularFence(BaseModel):
 
     name: str = "Rectangular Fence"
     coordinates: RecCoordinates
+    type: str = Field("Rectangular", const=True)
 
     async def draw_fence(self) -> FenceImage:
         """Draw the fence into as blanck image"""

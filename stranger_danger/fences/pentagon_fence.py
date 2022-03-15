@@ -3,7 +3,7 @@ from typing import Tuple
 import cv2
 import numpy as np
 from matplotlib import path
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from stranger_danger.constants.image_constants import COLOR, THICKNESS, H, W
 from stranger_danger.constants.image_types import FenceImage
@@ -16,6 +16,7 @@ class PentagonFence(BaseModel):
 
     name: str = "Pentagon Fence"
     coordinates: PentCoordinates
+    type: str = Field("Pentagon", const=True)
 
     async def draw_fence(self) -> FenceImage:
         """Draw the fence into as blanck image"""
