@@ -31,7 +31,10 @@ async def read_fences(db=Depends(create_session)):
     """Return all the fences"""
     result = await db.execute(select(Fences))
     return [
-        getattr(FenceMapper, fence.type).parse_obj(fence.definition)
+        {
+            "id": fence.id,
+            "value": getattr(FenceMapper, fence.type).parse_obj(fence.definition),
+        }
         for fence in result.scalars()
     ]
 
