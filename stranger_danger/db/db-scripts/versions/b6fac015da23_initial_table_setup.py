@@ -1,15 +1,15 @@
 """Initial Table Setup
 
-Revision ID: 77ae959c826b
+Revision ID: b6fac015da23
 Revises:
-Create Date: 2022-03-14 21:42:19.598210
+Create Date: 2022-03-15 18:40:23.248085
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "77ae959c826b"
+revision = "b6fac015da23"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -39,7 +39,7 @@ def upgrade():
         "fences",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("definition", sa.JSON(), nullable=True),
-        sa.Column("type", sa.String(), nullable=True),
+        sa.Column("type", sa.String(length=30), nullable=True),
         sa.Column(
             "date", sa.DateTime(), server_default=sa.text("now()"), nullable=True
         ),
