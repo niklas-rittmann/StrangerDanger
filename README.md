@@ -15,9 +15,9 @@
 - [x] Build the event based image detection
 - [ ] Integrate an API that allows you to:
   - [ ] Authentificate
-  - [ ] Specify fences
+  - [x] Specify fences
   - [ ] Select different image classifiers
-  - [ ] Start and Stop the detection service
+  - [x] Start and Stop the detection service
   - [ ] Setup Email Settings (e. g. Receivers)
   - [ ] Get the last predictions sorted by time
 - [ ] Build docker image to simplify use
