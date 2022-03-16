@@ -2,7 +2,7 @@ import os
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy.sql.expression import delete, select
+from sqlalchemy.sql.expression import select
 
 from stranger_danger.api.app.internal.cache import watcher_cache
 from stranger_danger.api.app.routers.fences import fence_from_db
@@ -12,11 +12,7 @@ from stranger_danger.db.tables import Fences
 from stranger_danger.detector.detector import Detector
 from stranger_danger.detector.event_listener import FilesytemWatcher
 from stranger_danger.email_service.send_mail import EmailConstrutor
-from stranger_danger.fences.circular_fence import CircularFence
-from stranger_danger.fences.pentagon_fence import PentagonFence
 from stranger_danger.fences.protocol import Fence
-from stranger_danger.fences.rectangular_fence import RectangularFence
-from tests.conftest import classifier, detector
 
 router = APIRouter(
     prefix="/detector",
@@ -31,7 +27,7 @@ async def create_detector(db: AsyncSession) -> Detector:
     email = EmailConstrutor(receivers=[os.getenv("EMAIL_RECEIVER")])
     fences = await fetch_fences_from_db(db)
     if not fences:
-        raise HTTPException(status_code=404, detail=f"No fences found!")
+        raise HTTPException(status_code=404, detail="No fences found!")
     detector = Detector(classifier=classifier, fences=fences, email=email)
     return detector
 
