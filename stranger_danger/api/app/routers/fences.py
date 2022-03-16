@@ -9,6 +9,7 @@ from stranger_danger.db.session import create_session
 from stranger_danger.db.tables import Fences
 from stranger_danger.fences.circular_fence import CircularFence
 from stranger_danger.fences.pentagon_fence import PentagonFence
+from stranger_danger.fences.protocol import Fence
 from stranger_danger.fences.rectangular_fence import RectangularFence
 
 
@@ -26,16 +27,16 @@ router = APIRouter(
 )
 
 
+def fence_from_db(fence: Fences) -> Fence:
+    return getattr(FenceMapper, str(fence.type)).parse_obj(fence.definition)
+
+
 @router.get("/")
 async def read_fences(db=Depends(create_session)):
     """Return all the fences"""
     result = await db.execute(select(Fences))
     return [
-        {
-            "id": fence.id,
-            "value": getattr(FenceMapper, fence.type).parse_obj(fence.definition),
-        }
-        for fence in result.scalars()
+        {"id": fence.id, "value": fence_from_db(fence)} for fence in result.scalars()
     ]
 
 
