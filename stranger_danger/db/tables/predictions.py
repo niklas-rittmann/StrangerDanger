@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, func
+from sqlalchemy import DateTime, Integer, func
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import Float, LargeBinary
 

@@ -1,4 +1,4 @@
-from sqlalchemy import JSON, Column, DateTime, Integer, func
+from sqlalchemy import JSON, DateTime, Integer, func
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import String
 

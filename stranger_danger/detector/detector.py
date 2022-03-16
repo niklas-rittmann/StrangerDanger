@@ -1,5 +1,5 @@
 import asyncio
-from typing import Sequence, Tuple, Union
+from typing import Sequence, Tuple
 
 import cv2
 import numpy as np
