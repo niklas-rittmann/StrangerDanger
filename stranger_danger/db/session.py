@@ -10,6 +10,15 @@ engine = create_async_engine(DB_URL, echo=True)
 async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 
+@asynccontextmanager
+async def create_context_session() -> AsyncGenerator[AsyncSession, None]:
+    """Yield a databse session"""
+    async with async_session() as session:
+        yield session
+        await session.commit()
+    await engine.dispose()
+
+
 async def create_session() -> AsyncGenerator[AsyncSession, None]:
     """Yield a databse session"""
     async with async_session() as session:
