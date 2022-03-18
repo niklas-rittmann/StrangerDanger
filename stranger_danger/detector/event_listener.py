@@ -19,17 +19,15 @@ def load_resize_image(path: Path) -> np.ndarray:
 
 
 class FilesytemWatcher:
-    def __init__(self, detector: Detector, status: bool) -> None:
+    def __init__(self, detector: Detector, subpath: Path = "") -> None:
         # Use PollingObserver to be able to watch network drives as well
         self.filewatcher = PollingObserver()
         self.detector = detector
-        self.status: bool = status
+        self.path = subpath if subpath else DIRECTORY_TO_WATCH
 
     def run_watcher(self) -> None:
         """Start the filesystem watcher"""
-        self.filewatcher.schedule(
-            FileHandler(self.detector), DIRECTORY_TO_WATCH, recursive=True
-        )
+        self.filewatcher.schedule(FileHandler(self.detector), self.path, recursive=True)
         self.filewatcher.start()
 
     def stop_watcher(self) -> None:

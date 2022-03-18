@@ -1,15 +1,15 @@
 """Initial Table Setup
 
-Revision ID: 6f66e79e820a
+Revision ID: 20af49be07cf
 Revises:
-Create Date: 2022-03-18 18:14:15.970882
+Create Date: 2022-03-18 19:56:58.149210
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "6f66e79e820a"
+revision = "20af49be07cf"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -20,7 +20,7 @@ def upgrade():
     op.create_table(
         "areas",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("directory", sa.String(length=30), nullable=True),
+        sa.Column("directory", sa.String(length=400), nullable=True),
         sa.Column(
             "date", sa.DateTime(), server_default=sa.text("now()"), nullable=True
         ),

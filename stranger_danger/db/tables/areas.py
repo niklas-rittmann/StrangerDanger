@@ -10,5 +10,5 @@ class Areas(Base):
 
     __tablename__ = "areas"
     id = Column(Integer, primary_key=True)
-    directory = Column(String(30))
+    directory = Column(String(400))
     date = Column(DateTime, server_default=func.now())
