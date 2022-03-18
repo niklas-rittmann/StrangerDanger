@@ -1,18 +1,8 @@
-import os
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy.sql.expression import select
+from fastapi import APIRouter, Depends
 
 from stranger_danger.api.app.internal.cache import watcher_cache
-from stranger_danger.api.app.routers.fences import fence_from_db
-from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
+from stranger_danger.api.app.internal.detector import create, schema
 from stranger_danger.db.session import create_session
-from stranger_danger.db.tables import Fences
-from stranger_danger.detector.detector import Detector
-from stranger_danger.detector.event_listener import FilesytemWatcher
-from stranger_danger.email_service.send_mail import EmailConstrutor
-from stranger_danger.fences.protocol import Fence
 
 router = APIRouter(
     prefix="/detector",
@@ -21,50 +11,30 @@ router = APIRouter(
 )
 
 
-async def create_detector(db: AsyncSession) -> Detector:
-    """Compose a detector to monitor strangers"""
-    classifier = Cv2Dnn()
-    email = EmailConstrutor(receivers=[os.getenv("EMAIL_RECEIVER")])
-    fences = await fetch_fences_from_db(db)
-    if not fences:
-        raise HTTPException(status_code=404, detail="No fences found!")
-    detector = Detector(classifier=classifier, fences=fences, email=email)
-    return detector
-
-
-async def fetch_fences_from_db(db: AsyncSession) -> list[Fence]:
-    """Fetch the fences from database"""
-    result = await db.execute(select(Fences))
-    return [fence_from_db(fence) for fence in result.scalars()]
-
-
-@router.get("/")
-async def detector_status():
+@router.get("/{area_id}")
+async def detector_status(area_id: int):
     """Get the detector status"""
-    watcher = watcher_cache.get_item("Watcher")
+    watcher = watcher_cache.get_item(area_id)
     if watcher:
-        return {"Status": watcher.is_running}
-    return {"Status": "No watcher running"}
+        return schema.DetectorRunning(area_id=area_id, running=watcher.is_running)
+    return schema.DetectorRunning(area_id=area_id, running=False)
 
 
-@router.post("/start")
-async def start_detector(db=Depends(create_session)):
+@router.post("/start/{area_id}")
+async def start_detector(area_id: int, db=Depends(create_session)):
     """Start the detector"""
-    if watcher_cache.get_item("Watcher"):
-        return {"Status": "Watcher already running"}
-    detector = await create_detector(db)
-    watcher = FilesytemWatcher(detector, True)
-    watcher.run_watcher()
-    watcher_cache.add("Watcher", watcher)
-    return {"Status": "Started Watcher"}
+    if watcher_cache.get_item(area_id):
+        return schema.DetectorRunning(area_id=area_id, running=True)
+    watcher_cache.add(area_id, await create.run(db, area_id))
+    return schema.DetectorChanged(area_id=area_id, status="started")
 
 
-@router.post("/stop")
-async def stop_detector():
+@router.post("/stop/{area_id}")
+async def stop_detector(area_id: int):
     """Stop the detector"""
-    watcher = watcher_cache.get_item("Watcher")
+    watcher = watcher_cache.get_item(area_id)
     if not watcher:
-        return {"Status": "No Watcher running"}
+        return schema.DetectorRunning(area_id=area_id, running=False)
     watcher.stop_watcher()
-    watcher_cache.remove("Watcher")
-    return {"Status": "Stopped watcher"}
+    watcher_cache.remove(area_id)
+    return schema.DetectorChanged(area_id=area_id, status="stopped")

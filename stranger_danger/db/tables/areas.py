@@ -1,16 +1,14 @@
-from sqlalchemy import JSON, DateTime, Integer, func
+from sqlalchemy import DateTime, Integer, func
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import String
 
 from stranger_danger.db.config.settings import Base
 
 
-class Fences(Base):
+class Areas(Base):
     """ORM Model of Fences"""
 
-    __tablename__ = "fences"
+    __tablename__ = "areas"
     id = Column(Integer, primary_key=True)
-    area = Column(Integer)
-    definition = Column(JSON)
-    type = Column(String(30))
+    directory = Column(String(30))
     date = Column(DateTime, server_default=func.now())
