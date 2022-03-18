@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -6,6 +7,7 @@ from sqlalchemy.sql.expression import select
 
 from stranger_danger.api.app.routers.fences import fence_from_db
 from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
+from stranger_danger.db.tables.areas import Areas
 from stranger_danger.db.tables.fences import Fences
 from stranger_danger.detector.detector import Detector
 from stranger_danger.detector.event_listener import FilesytemWatcher
@@ -15,10 +17,19 @@ from stranger_danger.fences.protocol import Fence
 
 async def run(db: AsyncSession, area_id: int) -> FilesytemWatcher:
     """Run a detecor"""
+    path_to_watch = await get_directory(db, area_id)
     detector = await compose_detector(db, area_id)
-    watcher = FilesytemWatcher(detector, True)
+    watcher = FilesytemWatcher(detector, path_to_watch)
     watcher.run_watcher()
     return watcher
+
+
+async def get_directory(db: AsyncSession, area_id: int) -> Path:
+    result = await db.execute(select(Areas).where(Areas.id == area_id))
+    result = result.first()
+    if result:
+        return Path(result.first().directory)
+    raise HTTPException(status_code=404, detail=f"No area with area_id {area_id}")
 
 
 async def compose_detector(db: AsyncSession, area_id: int) -> Detector:
