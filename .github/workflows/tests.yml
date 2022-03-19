@@ -26,4 +26,4 @@ jobs:
       - name: Run tests
         run: poetry run coverage run -m pytest tests
       - name: Coverage Report
-        run: poetry run coverage report -m
+        run: poetry run coverage report -m --skip-covered
