@@ -26,10 +26,9 @@ async def run(db: AsyncSession, area_id: int) -> FilesytemWatcher:
 
 async def get_directory(db: AsyncSession, area_id: int) -> Path:
     result = await db.execute(select(Areas).where(Areas.id == area_id))
-    result = result.first()
     if result:
-        return Path(result.first().directory)
-    raise HTTPException(status_code=404, detail=f"No area with area_id {area_id}")
+        return Path(result.scalars().first().directory)
+    raise HTTPException(status_code=404, detail=f"No area with area id:{area_id}")
 
 
 async def compose_detector(db: AsyncSession, area_id: int) -> Detector:
