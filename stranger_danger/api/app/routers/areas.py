@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.sql.expression import delete, select
 
-from stranger_danger.api.app.internal.areas.path import is_valid
+from stranger_danger.api.app.internal.areas.path import check_store_area
 from stranger_danger.api.app.internal.areas.schema import AreaBase
 from stranger_danger.api.app.internal.cache import watcher_cache
 from stranger_danger.db.session import create_session
@@ -26,11 +26,7 @@ async def read_areas(db=Depends(create_session)):
 async def create_area(path: str, db=Depends(create_session)):
     """Create and store area"""
     watch_dir = f"{DIRECTORY_TO_WATCH}/{path}"
-    await is_valid(db, watch_dir)
-    area = Areas(directory=watch_dir)
-    db.add(area)
-    await db.flush()
-    return AreaBase(id=area.id, status="Created area")
+    return check_store_area(db, watch_dir)
 
 
 @router.delete("/{area_id}")
