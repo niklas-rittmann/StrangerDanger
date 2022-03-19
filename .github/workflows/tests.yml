@@ -23,9 +23,7 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
         run: poetry install
-      - name: Remove old coverage data
-        run: rm .coverage
       - name: Run tests
         run: poetry run coverage run -m pytest tests
       - name: Coverage Report
-        run: poetry run coverage report -m --skip-covered
+        run: poetry run coverage report -m --skip-covered --ignore-errors
