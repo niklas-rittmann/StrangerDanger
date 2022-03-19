@@ -26,7 +26,7 @@ async def read_areas(db=Depends(create_session)):
 async def create_area(path: str, db=Depends(create_session)):
     """Create and store area"""
     watch_dir = f"{DIRECTORY_TO_WATCH}/{path}"
-    return check_store_area(db, watch_dir)
+    return await check_store_area(db, watch_dir)
 
 
 @router.delete("/{area_id}")
