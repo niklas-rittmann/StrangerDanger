@@ -12,9 +12,9 @@ async def is_valid(db: AsyncSession, watch_dir: str) -> bool:
     if not os.path.isdir(watch_dir):
         raise HTTPException(status_code=404, detail=f"Not a directory: {watch_dir}")
     areas = await db.execute(select(Areas).where(Areas.directory == watch_dir))
-    if areas:
+    if area := areas.scalars().first():
         raise HTTPException(
             status_code=404,
-            detail=f"Directory already exists with {areas.id}",
+            detail=f"Area already exists with area id:{area.id}",
         )
     return True
