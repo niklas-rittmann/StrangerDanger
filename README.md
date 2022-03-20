@@ -24,3 +24,4 @@
 - [ ] Build a web based user interface to serve the API
 - [ ] Add different image streaming services
 - [ ] Detect different enteties like dogs as well
+- [ ] Trigger event when Stranger is detected
