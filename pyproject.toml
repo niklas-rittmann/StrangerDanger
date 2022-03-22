@@ -19,6 +19,7 @@ setuptools = "^60.9.3"
 fastapi = "^0.75.0"
 uvicorn = "^0.17.6"
 coverage = "^6.3.2"
+python-dotenv = "^0.19.2"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

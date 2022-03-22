@@ -1,5 +1,4 @@
 import asyncio
-import os
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
@@ -10,22 +9,12 @@ from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
 from stranger_danger.constants.image_types import AnnotadedImage
-
-# Add them for now, move them to database
-SENDER = os.getenv("SENDER", "")
-PASSWORD = os.getenv("EMAIL_PASSWORD", "")
-SERVER = os.getenv("EMAIL_SERVER", "")
-PORT = int(os.getenv("EMAIL_PORT", 587))
-SUBJECT = os.getenv("EMAIL_SUBJECT", "")
+from stranger_danger.constants.settings import EmailSettings
 
 
 class EmailConstrutor(BaseModel):
     receivers: Sequence[EmailStr]
-    sender: str = SENDER
-    password: str = PASSWORD
-    server: str = SERVER
-    port: int = PORT
-    subject: str = SUBJECT
+    settings: EmailSettings = EmailSettings()
 
     async def send_email(self, image: AnnotadedImage):
         """Send Email to receivers"""
@@ -49,8 +38,8 @@ class EmailConstrutor(BaseModel):
     def _create_message(self, image: AnnotadedImage) -> MIMEMultipart:
         """Create multipart message"""
         msg = MIMEMultipart()
-        msg["Subject"] = self.subject
-        msg["From"] = self.sender
+        msg["Subject"] = self.settings.EMAIL_SUBJECT
+        msg["From"] = self.settings.SENDER
         msg.attach(self._add_image_to_email(image))
         return msg
 
@@ -60,8 +49,8 @@ class EmailConstrutor(BaseModel):
 
     def _establish_connection(self, session: SMTP) -> SMTP:
         """Establish a connection to the email server"""
-        session.connect(self.server, self.port)
-        session.login(self.sender, self.password)
+        session.connect(self.settings.EMAIL_SERVER, self.settings.EMAIL_PORT)
+        session.login(self.settings.SENDER, self.settings.EMAIL_PASSWORD)
         return session
 
     async def _send_email(self, message: MIMEMultipart, receiver: str, session: SMTP):
