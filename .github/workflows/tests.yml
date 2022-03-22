@@ -1,5 +1,20 @@
 name: tests
 on: push
+
+env:
+  SENDER: StrangerDanger
+  EMAIL_PASSWORD: StrangerDanger
+  EMAIL_SERVER: StrangerDanger
+  EMAIL_PORT: 587
+  EMAIL_SUBJECT: TestMail
+  EMAIL_RECEIVER: valid@email-address.de
+  DB_USER: StrangerDanger
+  DB_PASSWORD: StrangerDanger
+  DB_HOST: StrangerDanger
+  DB_DATABASE: StrangerDanger
+  DIRECTORY_TO_WATCH: StrangerDanger
+  SECRET: Stanger
+
 jobs:
   test:
     strategy:
@@ -9,7 +24,6 @@ jobs:
         poetry-version: [1.1.12]
         os: [ubuntu-18.04]
     runs-on: ${{ matrix.os }}
-    environment: Tests
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
