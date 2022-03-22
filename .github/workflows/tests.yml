@@ -24,6 +24,19 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run tests
+        env:
+          SENDER: ${{ secrets.SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_SUBJECT: ${{ secrets.EMAIL_SUBJECT }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DIRECTORY_TO_WATCH: ${{ secrets.DIRECTORY_TO_WATCH }}
+          SECRET: ${{ secrets.SECRET }}
         run: poetry run coverage run -m pytest tests
       - name: Coverage Report
         run: poetry run coverage report -m --skip-covered --ignore-errors
