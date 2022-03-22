@@ -4,6 +4,7 @@ from typing import Union
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.sql.expression import delete, select
 
+from stranger_danger.api.app.internal.auth.auth import auth_handler
 from stranger_danger.api.app.internal.examples import fence_examples
 from stranger_danger.db.queries import get_by_id
 from stranger_danger.db.session import create_session
@@ -25,6 +26,7 @@ class FenceMapper:
 router = APIRouter(
     prefix="/fences",
     tags=["fences"],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},
 )
 

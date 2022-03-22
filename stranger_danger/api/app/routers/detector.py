@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 
+from stranger_danger.api.app.internal.auth.auth import auth_handler
 from stranger_danger.api.app.internal.cache import watcher_cache
 from stranger_danger.api.app.internal.detector import create, schema
 from stranger_danger.db.session import create_session
@@ -7,6 +8,7 @@ from stranger_danger.db.session import create_session
 router = APIRouter(
     prefix="/detector",
     tags=["detector"],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},
 )
 
