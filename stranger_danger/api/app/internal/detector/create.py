@@ -34,7 +34,7 @@ async def get_directory(db: AsyncSession, area_id: int) -> Path:
 async def compose_detector(db: AsyncSession, area_id: int) -> Detector:
     """Compose a detector to monitor strangers"""
     classifier = Cv2Dnn()
-    email = EmailConstrutor(receivers=[EmailSettings.EMAIL_RECEIVER])
+    email = EmailConstrutor(receivers=[EmailSettings().EMAIL_RECEIVER])
     fences = await fetch_fences_from_db(db, area_id)
     detector = Detector(classifier=classifier, fences=fences, email=email)
     return detector
