@@ -20,6 +20,9 @@ fastapi = "^0.75.0"
 uvicorn = "^0.17.6"
 coverage = "^6.3.2"
 python-dotenv = "^0.19.2"
+passlib = "^1.7.4"
+bcrypt = "^3.2.0"
+PyJWT = "^2.3.0"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
