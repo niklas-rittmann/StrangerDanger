@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from fastapi import HTTPException
@@ -7,6 +6,7 @@ from sqlalchemy.sql.expression import select
 
 from stranger_danger.api.app.routers.fences import fence_from_db
 from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
+from stranger_danger.constants.settings import EmailSettings
 from stranger_danger.db.tables.areas import Areas
 from stranger_danger.db.tables.fences import Fences
 from stranger_danger.detector.detector import Detector
@@ -34,7 +34,7 @@ async def get_directory(db: AsyncSession, area_id: int) -> Path:
 async def compose_detector(db: AsyncSession, area_id: int) -> Detector:
     """Compose a detector to monitor strangers"""
     classifier = Cv2Dnn()
-    email = EmailConstrutor(receivers=[os.getenv("EMAIL_RECEIVER")])
+    email = EmailConstrutor(receivers=[EmailSettings.EMAIL_RECEIVER])
     fences = await fetch_fences_from_db(db, area_id)
     detector = Detector(classifier=classifier, fences=fences, email=email)
     return detector
