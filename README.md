@@ -11,7 +11,7 @@
 - [x] Integrate the first image classifier
 - [x] Create an Email constructor to send the prediction images to different receivers
 - [x] Build a class the hold different fences, the email constructor and a classifier
-- [x] Integrate a databse to hold the fences, predictions, classifiers and email settings
+- [x] Integrate a database to hold the fences, predictions, classifiers and email settings
 - [x] Build the event based image detection
 - [ ] Integrate an API that allows you to:
   - [ ] Authentificate
@@ -23,5 +23,5 @@
 - [ ] Build docker image to simplify use
 - [ ] Build a web based user interface to serve the API
 - [ ] Add different image streaming services
-- [ ] Detect different enteties like dogs as well
+- [ ] Detect different entities like dogs as well
 - [ ] Trigger event when Stranger is detected
