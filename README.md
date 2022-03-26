@@ -14,7 +14,7 @@
 - [x] Integrate a database to hold the fences, predictions, classifiers and email settings
 - [x] Build the event based image detection
 - [ ] Integrate an API that allows you to:
-  - [ ] Authentificate
+  - [x] Authentificate
   - [x] Specify fences
   - [ ] Select different image classifiers
   - [x] Start and Stop the detection service
