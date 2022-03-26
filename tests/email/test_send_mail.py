@@ -3,6 +3,7 @@ from smtplib import SMTP
 
 import numpy as np
 
+from stranger_danger.constants.settings import EmailSettings
 from stranger_danger.email_service.send_mail import EmailConstrutor
 
 
@@ -25,7 +26,7 @@ def test_create_message():
     """Test if message gets formatted the right way"""
     rec, sender, sub = (
         ["test@test.de"],
-        "me",
+        EmailSettings().SENDER,
         "test",
     )
 
@@ -40,7 +41,7 @@ def test_send_message(monkeypatch):
     """Test if message gets formatted the right way"""
     rec, sender, sub = (
         ["test@test.de"],
-        "me",
+        EmailSettings().SENDER,
         "test",
     )
 
