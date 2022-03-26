@@ -27,7 +27,7 @@ def test_create_message():
     rec, sender, sub = (
         ["test@test.de"],
         EmailSettings().SENDER,
-        "test",
+        EmailSettings().EMAIL_SUBJECT,
     )
 
     mail = EmailConstrutor(receivers=rec, sender=sender, subject=sub)
@@ -42,7 +42,7 @@ def test_send_message(monkeypatch):
     rec, sender, sub = (
         ["test@test.de"],
         EmailSettings().SENDER,
-        "test",
+        EmailSettings().EMAIL_SUBJECT,
     )
 
     class Session:
