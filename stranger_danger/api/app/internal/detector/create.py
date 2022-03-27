@@ -1,13 +1,14 @@
 from pathlib import Path
 
 from fastapi import HTTPException
+from pydantic.networks import EmailStr
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import select
 
 from stranger_danger.api.app.routers.fences import fence_from_db
 from stranger_danger.classifier.cv2dnn.cv2_dnn import Cv2Dnn
-from stranger_danger.constants.settings import EmailSettings
 from stranger_danger.db.tables.areas import Areas
+from stranger_danger.db.tables.email import Email
 from stranger_danger.db.tables.fences import Fences
 from stranger_danger.detector.detector import Detector
 from stranger_danger.detector.event_listener import FilesytemWatcher
@@ -25,6 +26,7 @@ async def run(db: AsyncSession, area_id: int) -> FilesytemWatcher:
 
 
 async def get_directory(db: AsyncSession, area_id: int) -> Path:
+    """Fetch the directories to watch from the databse"""
     result = await db.execute(select(Areas).where(Areas.id == area_id))
     if result:
         return Path(result.scalars().first().directory)
@@ -34,10 +36,20 @@ async def get_directory(db: AsyncSession, area_id: int) -> Path:
 async def compose_detector(db: AsyncSession, area_id: int) -> Detector:
     """Compose a detector to monitor strangers"""
     classifier = Cv2Dnn()
-    email = EmailConstrutor(receivers=[EmailSettings().EMAIL_RECEIVER])
+    emails = await fetch_emails_from_db(db, area_id)
+    email = EmailConstrutor(receivers=emails)
     fences = await fetch_fences_from_db(db, area_id)
     detector = Detector(classifier=classifier, fences=fences, email=email)
     return detector
+
+
+async def fetch_emails_from_db(db: AsyncSession, area_id: int) -> list[EmailStr]:
+    """Fetch the emails from database"""
+    result = await db.execute(select(Email).where(Email.area == area_id))
+    emails = [email.address for email in result.scalars()]
+    if not emails:
+        raise HTTPException(status_code=404, detail="No email found!")
+    return emails
 
 
 async def fetch_fences_from_db(db: AsyncSession, area_id: int) -> list[Fence]:
