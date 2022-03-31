@@ -1,10 +1,11 @@
 FROM python:3.10-slim-buster as backend
 
-COPY requirements.txt /tmp/requirements.txt
-
 # Install opencv dependencies
 RUN apt-get update \
 && apt-get install libgl1 -y
+
+# Copy over python dependencies
+COPY requirements.txt /tmp/requirements.txt
 
 # Install required python packages
 RUN python -m venv /opt/venv \
