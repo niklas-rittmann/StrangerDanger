@@ -11,18 +11,18 @@ jobs:
       - name: Make envfile
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          env_key_SENDER: StrangerDanger
-          env_key_EMAIL_PASSWORD: StrangerDanger
-          env_key_EMAIL_SERVER: StrangerDanger
-          env_key_EMAIL_PORT: 587
-          env_key_EMAIL_SUBJECT: TestMail
-          env_key_EMAIL_RECEIVER: valid@email-address.de
-          env_key_DB_USER: StrangerDanger
-          env_key_DB_PASSWORD: StrangerDanger
-          env_key_DB_HOST: StrangerDanger
-          env_key_DB_DATABASE: StrangerDanger
-          env_key_DIRECTORY_TO_WATCH: StrangerDanger
-          env_key_SECRET: Stanger
+          envkey_SENDER: StrangerDanger
+          envkey_EMAIL_PASSWORD: StrangerDanger
+          envkey_EMAIL_SERVER: StrangerDanger
+          envkey_EMAIL_PORT: 587
+          envkey_EMAIL_SUBJECT: TestMail
+          envkey_EMAIL_RECEIVER: valid@email-address.de
+          envkey_DB_USER: StrangerDanger
+          envkey_DB_PASSWORD: StrangerDanger
+          envkey_DB_HOST: StrangerDanger
+          envkey_DB_DATABASE: StrangerDanger
+          envkey_DIRECTORY_TO_WATCH: StrangerDanger
+          envkey_SECRET: Stanger
           file_name: .compose.env
       - name: Build test image
         run: docker-compose build test
