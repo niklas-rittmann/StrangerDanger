@@ -36,7 +36,7 @@ class Cv2Dnn:
         self.labels = LABELS
         self.model = self._setup_model()
 
-    def _setup_model(self):
+    def _setup_model(self) -> cv2.dnn_Net:
         """Initialize the cv2dnn model"""
         return cv2.dnn.readNetFromCaffe(
             f"{BASE_PATH}/requirements/MobileNetSSD_deploy.prototxt.txt",
