@@ -1,34 +1,29 @@
 name: tests
 on: push
 
-env:
-  SENDER: StrangerDanger
-  EMAIL_PASSWORD: StrangerDanger
-  EMAIL_SERVER: StrangerDanger
-  EMAIL_PORT: 587
-  EMAIL_SUBJECT: TestMail
-  EMAIL_RECEIVER: valid@email-address.de
-  DB_USER: StrangerDanger
-  DB_PASSWORD: StrangerDanger
-  DB_HOST: StrangerDanger
-  DB_DATABASE: StrangerDanger
-  DIRECTORY_TO_WATCH: StrangerDanger
-  SECRET: Stanger
-
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.9]
-        os: [ubuntu-18.04]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: pre-commit/action@v2.0.3
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
         with:
-          python-version: ${{ matrix.python-version }}
+          env_key_SENDER: StrangerDanger
+          env_key_EMAIL_PASSWORD: StrangerDanger
+          env_key_EMAIL_SERVER: StrangerDanger
+          env_key_EMAIL_PORT: 587
+          env_key_EMAIL_SUBJECT: TestMail
+          env_key_EMAIL_RECEIVER: valid@email-address.de
+          env_key_DB_USER: StrangerDanger
+          env_key_DB_PASSWORD: StrangerDanger
+          env_key_DB_HOST: StrangerDanger
+          env_key_DB_DATABASE: StrangerDanger
+          env_key_DIRECTORY_TO_WATCH: StrangerDanger
+          env_key_SECRET: Stanger
+          file_name: .compose.env
       - name: Build test image
         run: docker-compose build test
       - name: Run tests in image
