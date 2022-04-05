@@ -3,8 +3,11 @@ version: '3.1'
 services:
   backend:
     image: stranger_danger:1.0.0
+    depends_on:
+      - db
     build:
-      context: ./stranger_danger
+      context: .
+      dockerfile: docker/backend/Dockerfile
       target: backend
     ports:
       - '8000:8000'
@@ -22,3 +25,10 @@ services:
       POSTGRES_DB: $DB_DATABASE
     ports:
       - '5432:5432'
+  test:
+    image: stranger_danger-test:1.0.0
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+      target: tests
+    env_file: .compose.env
