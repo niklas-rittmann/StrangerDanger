@@ -21,24 +21,15 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.9]
-        poetry-version: [1.1.12]
         os: [ubuntu-18.04]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }V}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: pre-commit/action@v2.0.3
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run image
-        uses: abatilo/actions-poetry@v2.0.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
-      - name: Install dependencies
-        run: poetry install
-      - name: Run tests
-        run: poetry run coverage run -m pytest tests
-      - name: Coverage Report
-        run: poetry run coverage report -m --skip-covered --ignore-errors
+      - name: Build test image
+        run: docker-compose build test
+      - name: Run tests in image
+        run: docker-compose run make test
