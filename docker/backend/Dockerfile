@@ -2,7 +2,7 @@ FROM python:3.9-slim-buster as backend
 
 # Install opencv dependencies
 RUN apt-get update \
-&& apt-get install libgl1 -y \
+&& apt-get install libgl1 make -y \
 && rm -rf /var/lib/apt/lists*
 
 # Copy over python dependencies
