@@ -15,7 +15,8 @@ RUN python -m venv /opt/venv \
 
 # Set Pythonpath to project root
 ENV PATH="/opt/venv/bin:${PATH}" \
- PYTHONPATH=/opt/app
+ PYTHONPATH=/opt/app \
+ DIRECTORY_TO_WATCH=/tmp/stranger_danger
 
 # Copy over python source code
 COPY . /opt/app/stranger_danger
