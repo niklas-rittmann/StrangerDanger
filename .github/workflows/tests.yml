@@ -26,5 +26,7 @@ jobs:
           file_name: .compose.env
       - name: Build test image
         run: docker-compose build test
+      - name: Up Database
+        run: docker-compose up db
       - name: Run tests in image
         run: docker-compose run test make test
