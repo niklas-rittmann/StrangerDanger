@@ -73,3 +73,10 @@ def test_base_point(dnn_model):
     end = Coordinate(x=4, y=7)
     point = dnn_model._get_base_point(start, end)
     assert point == Coordinate(x=2, y=7)
+
+
+def test_transform(dnn_model):
+    """Test transformation step"""
+    in_image = (np.zeros((400, 600, 3)) * 255).astype(np.uint8)
+    predictions = dnn_model.transform(in_image)
+    assert not len(predictions)
