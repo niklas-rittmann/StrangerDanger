@@ -27,6 +27,6 @@ jobs:
       - name: Build test image
         run: docker-compose build test
       - name: Up Database
-        run: docker-compose
+        run: docker-compose up db
       - name: Run tests in image
         run: docker-compose run test make test
