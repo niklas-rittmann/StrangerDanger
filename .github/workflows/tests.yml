@@ -23,10 +23,13 @@ jobs:
           envkey_DB_DATABASE: StrangerDanger
           envkey_DIRECTORY_TO_WATCH: StrangerDanger
           envkey_SECRET: Stanger
+          envkey_POSTGRES_PASSWORD: StrangerDanger
+          envkey_POSTGRES_USER: StrangerDanger
+          envkey_POSTGRES_DB: StrangerDanger
           file_name: .compose.env
       - name: Build test image
         run: docker-compose build test
       - name: Up Database
-        run: docker-compose up db
+        run: docker-compose
       - name: Run tests in image
         run: docker-compose run test make test
