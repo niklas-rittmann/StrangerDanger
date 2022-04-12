@@ -24,7 +24,7 @@ jobs:
           envkey_EMAIL_RECEIVER: valid@email-address.de
           envkey_DB_USER: StrangerDanger
           envkey_DB_PASSWORD: StrangerDanger
-          envkey_DB_HOST: StrangerDanger
+          envkey_DB_HOST: db
           envkey_DB_DATABASE: StrangerDanger
           envkey_DIRECTORY_TO_WATCH: StrangerDanger
           envkey_SECRET: Stanger
