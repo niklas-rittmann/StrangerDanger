@@ -19,7 +19,7 @@
   - [ ] Select different image classifiers
   - [x] Start and Stop the detection service
   - [ ] Setup Email Settings (e. g. Receivers)
-  - [ ] Get the last predictions sorted by time
+  - [x] Get the last predictions sorted by time
 - [x] Build docker image to simplify use
 - [ ] Build a web based user interface to serve the API
 - [ ] Add different image streaming services
