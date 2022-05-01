@@ -29,7 +29,7 @@ jobs:
           envkey_DB_PASSWORD: StrangerDanger
           envkey_DB_HOST: db
           envkey_DB_DATABASE: StrangerDanger
-          envkey_DIRECTORY_TO_WATCH: StrangerDanger
+          envkey_DIRECTORY_TO_WATCH: .
           envkey_SECRET: Stanger
           file_name: .compose.env
       - name: Build test image
