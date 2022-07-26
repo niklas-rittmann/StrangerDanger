@@ -1,4 +1,5 @@
 import asyncio
+import copy
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTP
@@ -16,6 +17,15 @@ class EmailConstrutor(BaseModel):
     receivers: Sequence[EmailStr]
     settings: EmailSettings = EmailSettings()
 
+    def check_connection(self) -> bool:
+        """Check if the connection to the email server works"""
+        with SMTP() as smtp:
+            try:
+                self._establish_connection(smtp)
+            except ConnectionError:
+                return False
+        return True
+
     async def send_email(self, image: AnnotadedImage):
         """Send Email to receivers"""
         message = self._create_message(image)
@@ -25,15 +35,6 @@ class EmailConstrutor(BaseModel):
                 self._send_email(message, receiver, smtp) for receiver in self.receivers
             ]
             await asyncio.gather(*emails)
-
-    def check_connection(self) -> bool:
-        """Check if the connection to the email server works"""
-        with SMTP() as smtp:
-            try:
-                _ = self._establish_connection(smtp)
-            except ConnectionError:
-                return False
-        return True
 
     def _create_message(self, image: AnnotadedImage) -> MIMEMultipart:
         """Create multipart message"""
@@ -55,5 +56,6 @@ class EmailConstrutor(BaseModel):
 
     async def _send_email(self, message: MIMEMultipart, receiver: str, session: SMTP):
         """Add receiver to message and send"""
-        message["To"] = receiver
-        session.send_message(message)
+        mess = copy.deepcopy(message)
+        mess["To"] = receiver
+        session.send_message(mess)
